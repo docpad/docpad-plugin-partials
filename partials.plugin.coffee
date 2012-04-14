@@ -63,11 +63,13 @@ module.exports = (BasePlugin) ->
 			
 			# Render
 			document = docpad.createPartial()
-			document.filename = partial.name
-			document.fullPath = partial.path
+			document.set(
+				filename: partial.name
+				fullPath: partial.path
+			)
 			docpad.prepareAndRender document, partial.data, (err) ->
 				return next?(err)  if err
-				return next?(null,document.contentRendered)
+				return next?(null,document.get('contentRendered'))
 
 			# Chain
 			@

@@ -1,0 +1,8 @@
+{
+	"name": "docpad-plugin-partials-testsite",
+	"version": "0.1.0",
+	"private": true,
+	"dependencies": {
+		"docpad-plugin-eco": "latest"
+	}
+}

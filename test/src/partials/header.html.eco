@@ -1,0 +1,1 @@
+<header>Hello <%=@name or 'World'%></header>

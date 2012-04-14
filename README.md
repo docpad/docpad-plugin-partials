@@ -14,9 +14,9 @@ Then in our templates we will be exposed with the `@partial(filename,data)` func
 
 ### Example
 
-For instance we could create the file `src/partials/hello.html.md` which contains `**Hello <%=@name or 'World'%>**`.
+For instance we could create the file `src/partials/hello.html.md.eco` which contains `**Hello <%=@name or 'World'%>**`.
 
-We could then render it by using `<%=@partial('hello.html.coffee')%>` to get back `<strong>Hello World</strong>` or with `<%=@partial('hello.html.coffee',{name:'Apprentice'})%>` to get back `<strong>Hello Apprentice</strong>`.
+We could then render it by using `<%-@partial('hello.html.md.eco')%>` to get back `<strong>Hello World</strong>` or with `<%-@partial('hello.html.md.eco',{name:'Apprentice'})%>` to get back `<strong>Hello Apprentice</strong>`.
 
 
 
