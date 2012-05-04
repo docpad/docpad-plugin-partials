@@ -13,8 +13,8 @@ module.exports = (BasePlugin) ->
 		config:
 			partialsPath: 'partials'
 
-		# A list of all the partials to render
-		partialsToRender: null  # Object
+		# A list of all the partials we've discovered
+		foundPartials: null  # Object
 
 		# Prepare our Configuration
 		constructor: ->
@@ -33,7 +33,7 @@ module.exports = (BasePlugin) ->
 		# Render Partial Sync
 		# Mapped to templateData.partial
 		# Takes in a partialId and it's data and returns a temporary container
-		# which will be replaced later when we've finished rendering our partial 
+		# which will be replaced later when we've finished rendering our partial
 		renderPartialSync: (name,data) ->
 			# Prepare
 			config = @config
@@ -48,7 +48,7 @@ module.exports = (BasePlugin) ->
 				container: "[partial:#{id}]"
 
 			# Store it for later
-			@partialsToRender[id] = partial
+			@foundPartials[id] = partial
 
 			# Return the partial's container
 			return partial.container
@@ -60,10 +60,11 @@ module.exports = (BasePlugin) ->
 		renderPartial: (partial,next) ->
 			# Prepare
 			docpad = @docpad
-			
+
 			# Render
-			document = docpad.createPartial()
+			document = docpad.createDocument()
 			document.set(
+				partialId: partial.id
 				filename: partial.name
 				fullPath: partial.path
 			)
@@ -83,8 +84,8 @@ module.exports = (BasePlugin) ->
 		renderBefore: ({templateData}, next) ->
 			# Prepare
 			me = @
-			@partialsToRender = {}
-			
+			@foundPartials = {}
+
 			# Apply
 			templateData.partial = (name,data) ->
 				return me.renderPartialSync(name,data)
@@ -105,11 +106,9 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			me = @
 			docpad = @docpad
+			logger = @docpad.logger
 			config = @config
-			partialsToRender = @partialsToRender
-
-			# Ensure we are a document
-			return next?()  if file.type is 'partial'
+			foundPartials = @foundPartials
 
 			# Async
 			tasks = new balUtil.Group (err) ->
@@ -117,22 +116,33 @@ module.exports = (BasePlugin) ->
 				return next(err)
 
 			# Store all our files to be cached
-			balUtil.each partialsToRender, (partial) ->
+			balUtil.each foundPartials, (partial) ->
 				tasks.push (complete) ->
-					docpad.logger.log 'debug', "Partials rendering [#{partial.name}]"
+					# Check if we use this partial
+					# if we don't, then skip this partial
+					return complete()  if opts.content.indexOf(partial.container) is -1
+
+					# Log
+					logger.log 'debug', "Rendering partial: #{partial.name}"
+
+					# Render
 					me.renderPartial partial, (err,contentRendered) ->
 						# Check
 						if err
-							docpad.logger.log 'warn', "Partials failed to render [#{partial.name}]"
-							docpad.error(err)
-						
+							# Warn
+							docpad.warn("Rendering partial failed: #{partial.name}. The error follows:", err)
+
 						# Replace container with the rendered content
 						else
+							# Log
+							logger.log 'debug', "Rendered partial: #{partial.name}"
+
+							# Apply
 							opts.content = opts.content.replace(partial.container,contentRendered)
-						
+
 						# Done
 						return complete()
-			
+
 			# Fire the tasks together
 			tasks.async()
 
