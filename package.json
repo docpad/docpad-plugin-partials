@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-partials",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"description": "Adds support for Partials (re-usable templates) to DocPad",
 	"homepage": "https://github.com/bevry/docpad-extras",
 	"keywords": [

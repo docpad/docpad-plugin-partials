@@ -2,7 +2,7 @@
 module.exports = (BasePlugin) ->
 	# Requires
 	balUtil = require('bal-util')
-	path = require('path')
+	pathUtil = require('path')
 
 	# Define Plugin
 	class PartialsPlugin extends BasePlugin
@@ -24,7 +24,7 @@ module.exports = (BasePlugin) ->
 			config = @config
 
 			# Resolve our partialsPath
-			config.partialsPath = path.resolve(docpad.config.srcPath, config.partialsPath)
+			config.partialsPath = pathUtil.resolve(docpad.config.srcPath, config.partialsPath)
 
 
 		# -----------------------------
@@ -44,7 +44,7 @@ module.exports = (BasePlugin) ->
 				id: id
 				name: name
 				data: data
-				path: path.join config.partialsPath, name
+				path: pathUtil.join config.partialsPath, name
 				container: "[partial:#{id}]"
 
 			# Store it for later
@@ -61,16 +61,23 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			docpad = @docpad
 
-			# Render
-			document = docpad.createDocument()
-			document.set(
-				partialId: partial.id
-				filename: partial.name
-				fullPath: partial.path
-			)
-			docpad.prepareAndRender document, partial.data, (err) ->
-				return next?(err)  if err
-				return next?(null,document.get('contentRendered'))
+			# Check the partial exists
+			pathUtil.exists partial.path, (exists) ->
+				# If it doesn't, warn
+				unless exists
+					err = new Error("The partial [#{partial.name}] was not found, and as such will not be rendered.")
+					return next?(err)  if err
+
+				# Render
+				document = docpad.createDocument()
+				document.set(
+					partialId: partial.id
+					filename: partial.name
+					fullPath: partial.path
+				)
+				docpad.prepareAndRender document, partial.data, (err) ->
+					return next?(err)  if err
+					return next?(null,document.get('contentRendered'))
 
 			# Chain
 			@
@@ -97,8 +104,7 @@ module.exports = (BasePlugin) ->
 			@
 
 
-		# Write After
-		# Store all our files to be cached
+		# Render the document
 		renderDocument: (opts,next) ->
 			# Prepare
 			{templateData,file} = opts
@@ -111,16 +117,15 @@ module.exports = (BasePlugin) ->
 			foundPartials = @foundPartials
 
 			# Async
-			tasks = new balUtil.Group (err) ->
-				# Forward
-				return next(err)
+			tasks = new balUtil.Group(next)
 
 			# Store all our files to be cached
 			balUtil.each foundPartials, (partial) ->
 				tasks.push (complete) ->
 					# Check if we use this partial
 					# if we don't, then skip this partial
-					return complete()  if opts.content.indexOf(partial.container) is -1
+					if opts.content.indexOf(partial.container) is -1
+						return complete()
 
 					# Log
 					logger.log 'debug', "Rendering partial: #{partial.name}"
