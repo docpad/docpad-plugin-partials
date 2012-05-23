@@ -8,30 +8,30 @@
 		"docpad-plugin",
 		"partials",
 		"templates",
-        "partial",
-        "templating",
-        "template"
+		"partial",
+		"templating",
+		"template"
 	],
-    "author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
-    "maintainers": [
-        "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
-    ],
-    "contributors": [
-        "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
-    ],
-    "bugs": {
-        "url": "https://github.com/bevry/docpad-extras/issues"
-    },
-    "repository" : {
-        "type": "git",
-        "url": "http://github.com/bevry/docpad-extras.git"
-    },
-    "engines" : {
-        "node": ">=0.4.0",
-        "docpad": "5.x"
-    },
-    "dependencies": {
-        "bal-util": "1.4.x"
-    },
+	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+	"maintainers": [
+		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+	],
+	"contributors": [
+		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+	],
+	"bugs": {
+		"url": "https://github.com/bevry/docpad-extras/issues"
+	},
+	"repository" : {
+		"type": "git",
+		"url": "http://github.com/bevry/docpad-extras.git"
+	},
+	"engines" : {
+		"node": ">=0.4.0",
+		"docpad": "5.x"
+	},
+	"dependencies": {
+		"bal-util": "1.6.x"
+	},
 	"main": "./partials.plugin.coffee"
 }
