@@ -66,18 +66,15 @@ module.exports = (BasePlugin) ->
 				# If it doesn't, warn
 				unless exists
 					err = new Error("The partial [#{partial.name}] was not found, and as such will not be rendered.")
-					return next?(err)  if err
+					return next(err)  if err
 
 				# Render
-				document = docpad.createDocument()
-				document.set(
-					partialId: partial.id
-					filename: partial.name
+				document = docpad.ensureDocument({
 					fullPath: partial.path
-				)
+				})
 				docpad.prepareAndRender document, partial.data, (err) ->
-					return next?(err)  if err
-					return next?(null,document.get('contentRendered'))
+					return next(err)  if err
+					return next(null,document.get('contentRendered'))
 
 			# Chain
 			@
@@ -98,7 +95,7 @@ module.exports = (BasePlugin) ->
 				return me.renderPartialSync(name,data)
 
 			# Next
-			next?()
+			next()
 
 			# Chain
 			@
@@ -112,7 +109,6 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			me = @
 			docpad = @docpad
-			logger = @docpad.logger
 			config = @config
 			foundPartials = @foundPartials
 
@@ -128,7 +124,7 @@ module.exports = (BasePlugin) ->
 						return complete()
 
 					# Log
-					logger.log 'debug', "Rendering partial: #{partial.name}"
+					docpad.log 'debug', "Rendering partial: #{partial.name}"
 
 					# Render
 					me.renderPartial partial, (err,contentRendered) ->
@@ -140,7 +136,7 @@ module.exports = (BasePlugin) ->
 						# Replace container with the rendered content
 						else
 							# Log
-							logger.log 'debug', "Rendered partial: #{partial.name}"
+							docpad.log 'debug', "Rendered partial: #{partial.name}"
 
 							# Apply
 							opts.content = opts.content.replace(partial.container,contentRendered)
