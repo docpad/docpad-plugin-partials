@@ -44,7 +44,7 @@ module.exports = (BasePlugin) ->
 				id: id
 				name: name
 				data: data
-				path: pathUtil.join config.partialsPath, name
+				path: pathUtil.join(config.partialsPath, name)
 				container: "[partial:#{id}]"
 
 			# Store it for later
@@ -69,12 +69,8 @@ module.exports = (BasePlugin) ->
 					return next(err)  if err
 
 				# Render
-				document = docpad.ensureDocument({
-					fullPath: partial.path
-				})
-				docpad.prepareAndRender document, partial.data, (err) ->
-					return next(err)  if err
-					return next(null,document.get('contentRendered'))
+				docpad.renderPath partial.path, {templateData: partial.data}, (err,document,result) ->
+					return next(err,result)
 
 			# Chain
 			@
