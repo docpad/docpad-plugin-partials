@@ -56,21 +56,20 @@ module.exports = (BasePlugin) ->
 
 		# Render Partial
 		# Render a partial asynchronously
-		# next(err,details)
+		# next(err,result,document)
 		renderPartial: (partial,next) ->
 			# Prepare
 			docpad = @docpad
 
 			# Check the partial exists
-			pathUtil.exists partial.path, (exists) ->
+			balUtil.exists partial.path, (exists) ->
 				# If it doesn't, warn
 				unless exists
 					err = new Error("The partial [#{partial.name}] was not found, and as such will not be rendered.")
 					return next(err)  if err
 
 				# Render
-				docpad.renderPath partial.path, {templateData: partial.data}, (err,document,result) ->
-					return next(err,result)
+				docpad.renderPath(partial.path, {templateData:partial.data}, next)
 
 			# Chain
 			@
