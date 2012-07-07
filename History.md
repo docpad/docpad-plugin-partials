@@ -1,5 +1,9 @@
 ## History
 
+- v2.1.0 July 8, 2012
+	- Fixed path exists warning
+	- Updated for DocPad 6.1
+
 - v1.0.1 May 5, 2012
 	- Updated for DocPad v5.2
 	- Partials are now created with `createDocument` instead of `createPartial` which has been removed
