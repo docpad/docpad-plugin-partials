@@ -78,9 +78,8 @@ module.exports = (BasePlugin) ->
 		# -----------------------------
 		# Events
 
-		# Render Before
-		# Map the templateData functions
-		renderBefore: ({templateData}, next) ->
+		# Extend Template Data
+		extendTemplateData: ({templateData}) ->
 			# Prepare
 			me = @
 			@foundPartials = {}
@@ -89,14 +88,11 @@ module.exports = (BasePlugin) ->
 			templateData.partial = (name,data) ->
 				return me.renderPartialSync(name,data)
 
-			# Next
-			next()
-
 			# Chain
 			@
 
 
-		# Render the document
+		# Render the Document
 		renderDocument: (opts,next) ->
 			# Prepare
 			{templateData,file} = opts

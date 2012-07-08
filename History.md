@@ -1,5 +1,8 @@
 ## History
 
+- v2.1.1 July 8, 2012
+	- Moved the insertion of the partial template helper into the new `extendTemplateData` event
+
 - v2.1.0 July 8, 2012
 	- Fixed path exists warning
 	- Updated for DocPad 6.1
