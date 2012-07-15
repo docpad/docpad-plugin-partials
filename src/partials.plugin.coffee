@@ -44,7 +44,7 @@ module.exports = (BasePlugin) ->
 				id: id
 				name: name
 				data: data
-				path: pathUtil.join config.partialsPath, name
+				path: pathUtil.join(config.partialsPath, name)
 				container: "[partial:#{id}]"
 
 			# Store it for later
@@ -56,25 +56,20 @@ module.exports = (BasePlugin) ->
 
 		# Render Partial
 		# Render a partial asynchronously
-		# next(err,details)
+		# next(err,result,document)
 		renderPartial: (partial,next) ->
 			# Prepare
 			docpad = @docpad
 
 			# Check the partial exists
-			pathUtil.exists partial.path, (exists) ->
+			balUtil.exists partial.path, (exists) ->
 				# If it doesn't, warn
 				unless exists
 					err = new Error("The partial [#{partial.name}] was not found, and as such will not be rendered.")
 					return next(err)  if err
 
 				# Render
-				document = docpad.ensureDocument({
-					fullPath: partial.path
-				})
-				docpad.prepareAndRender document, partial.data, (err) ->
-					return next(err)  if err
-					return next(null,document.get('contentRendered'))
+				docpad.renderPath(partial.path, {templateData:partial.data}, next)
 
 			# Chain
 			@
@@ -83,9 +78,8 @@ module.exports = (BasePlugin) ->
 		# -----------------------------
 		# Events
 
-		# Render Before
-		# Map the templateData functions
-		renderBefore: ({templateData}, next) ->
+		# Extend Template Data
+		extendTemplateData: ({templateData}) ->
 			# Prepare
 			me = @
 			@foundPartials = {}
@@ -94,14 +88,11 @@ module.exports = (BasePlugin) ->
 			templateData.partial = (name,data) ->
 				return me.renderPartialSync(name,data)
 
-			# Next
-			next()
-
 			# Chain
 			@
 
 
-		# Render the document
+		# Render the Document
 		renderDocument: (opts,next) ->
 			# Prepare
 			{templateData,file} = opts
