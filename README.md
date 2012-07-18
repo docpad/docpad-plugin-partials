@@ -1,6 +1,12 @@
 # Partials Plugin for DocPad
+This plugin provides [DocPad](https://github.com/bevry/docpad) with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
 
-This plugin provides DocPad with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
+
+## Install
+
+```
+npm install --save docpad-plugin-partials
+```
 
 
 ## Usage
@@ -21,11 +27,9 @@ We could then render it by using `<%-@partial('hello.html.md.eco')%>` to get bac
 
 
 ## History
-
 You can discover the history inside the `History.md` file
 
 
 ## License
-
-Licensed under the [MIT License](http://creativecommons.org/licenses/MIT/)
+Licensed under the incredibly [permissive](http://en.wikipedia.org/wiki/Permissive_free_software_licence) [MIT License](http://creativecommons.org/licenses/MIT/)
 <br/>Copyright &copy; 2012 [Bevry Pty Ltd](http://bevry.me)
