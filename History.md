@@ -1,5 +1,8 @@
 ## History
 
+- v2.1.2 August 10, 2012
+	- Re-added markdown files to npm distribution as they are required for the npm website
+
 - v2.1.1 July 8, 2012
 	- Moved the insertion of the partial template helper into the new `extendTemplateData` event
 

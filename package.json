@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-partials",
-	"version": "2.1.1",
+	"version": "2.1.2",
 	"description": "Adds support for Partials (re-usable templates) to DocPad",
 	"homepage": "https://github.com/bevry/docpad-extras",
 	"keywords": [
@@ -31,7 +31,7 @@
 		"docpad": ">=6.1.x <7.0.0"
 	},
 	"dependencies": {
-		"bal-util": "1.12.x"
+		"bal-util": "1.13.x"
 	},
 	"devDependencies": {
 		"coffee-script": "1.3.x"
