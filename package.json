@@ -2,7 +2,7 @@
 	"name": "docpad-plugin-partials",
 	"version": "2.1.2",
 	"description": "Adds support for Partials (re-usable templates) to DocPad",
-	"homepage": "https://github.com/bevry/docpad-extras",
+	"homepage": "http://docpad.org/plugin/partials",
 	"keywords": [
 		"docpad",
 		"docpad-plugin",

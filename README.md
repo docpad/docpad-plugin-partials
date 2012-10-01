@@ -1,5 +1,5 @@
 # Partials Plugin for DocPad
-This plugin provides [DocPad](https://github.com/bevry/docpad) with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
+This plugin provides [DocPad](https://docpad.org) with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
 
 
 ## Install
