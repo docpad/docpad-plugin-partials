@@ -4,6 +4,10 @@ title: 'Partials Test'
 
 <%- @partial('header.html.eco') %>
 
+<%- @partial('header.html.eco',@) %>
+
 <%- @partial('header.html.eco',{name:'Partials!'}) %>
+
+<%- @partial('header.html.eco',@,{name:'Partials!'}) %>
 
 <%- @partial('footer.html') %>

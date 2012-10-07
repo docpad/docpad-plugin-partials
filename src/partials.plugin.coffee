@@ -85,7 +85,12 @@ module.exports = (BasePlugin) ->
 			@foundPartials = {}
 
 			# Apply
-			templateData.partial = (name,data) ->
+			templateData.partial = (name,objs...) ->
+				if objs.length >= 2
+					objs.unshift({})
+					data = balUtil.shallowExtendPlainObjects(objs...)
+				else
+					data = objs[0] ? {}
 				return me.renderPartialSync(name,data)
 
 			# Chain

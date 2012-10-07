@@ -1,5 +1,10 @@
 ## History
 
+- v2.2.0 October 7, 2012
+	- `@partial` signature now changed from `@partial(name,data)` to `@partial(name,objs...)`
+		- If multiple objects are specified, they will be shallow-y merged into an empty object
+		- This allows you to do things like `@partial('blah',@,{blah:'blah'})` to extend the partial `blah` with the template data and some custom partial data
+
 - v2.1.2 August 10, 2012
 	- Re-added markdown files to npm distribution as they are required for the npm website
 
