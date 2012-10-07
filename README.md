@@ -15,7 +15,7 @@ npm install --save docpad-plugin-partials
 
 To use, first create the `src/partials` directory, and place any partials you want to use in there.
 
-Then in our templates we will be exposed with the `@partial(filename,data)` function. The `data` argument is optional, and can be used to send custom data to the partial's `templateData`.
+Then in our templates we will be exposed with the `@partial(filename,data)` function. The `data` argument is optional, and can be used to send custom data to the partial's template data. If you would like to send over the current document's template data, then do the following `@partial(filename,@,data)`.
 
 
 ### Example
