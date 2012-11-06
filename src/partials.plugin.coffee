@@ -26,6 +26,9 @@ module.exports = (BasePlugin) ->
 			# Resolve our partialsPath
 			config.partialsPath = pathUtil.resolve(docpad.config.srcPath, config.partialsPath)
 
+			# Create our found partials object
+			@foundPartials = {}
+
 
 		# -----------------------------
 		# Helpers
@@ -79,10 +82,10 @@ module.exports = (BasePlugin) ->
 		# Events
 
 		# Extend Template Data
+		# Inject our partial methods
 		extendTemplateData: ({templateData}) ->
 			# Prepare
 			me = @
-			@foundPartials = {}
 
 			# Apply
 			templateData.partial = (name,objs...) ->
@@ -98,6 +101,7 @@ module.exports = (BasePlugin) ->
 
 
 		# Render the Document
+		# Render our partials
 		renderDocument: (opts,next) ->
 			# Prepare
 			{templateData,file} = opts
@@ -145,3 +149,8 @@ module.exports = (BasePlugin) ->
 
 			# Chain
 			@
+
+		# Generate After
+		# Reset the found partials after each generate, otherwise it will get very big
+		generateAfter: ->
+			@foundPartials = {}

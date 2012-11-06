@@ -1,5 +1,9 @@
 ## History
 
+- v2.2.1 November 6, 2012
+	- Fixed memory leak (didn't clean up after generations, so regenerations would take longer and longer)
+		- Fixes [#335](https://github.com/bevry/docpad/issues/335)
+
 - v2.2.0 October 7, 2012
 	- `@partial` signature now changed from `@partial(name,data)` to `@partial(name,objs...)`
 		- If multiple objects are specified, they will be shallow-y merged into an empty object
