@@ -1,5 +1,12 @@
 ## History
 
+- v2.3.0 November 23, 2012
+	- New way of doing partials
+		- Should be faster
+		- Should support watching better
+		- Supports fuzzy matching
+	- Thanks to [ashnur](https://github.com/ashnur) for [issue #283](https://github.com/bevry/docpad/issues/283)
+
 - v2.2.1 November 6, 2012
 	- Fixed memory leak (didn't clean up after generations, so regenerations would take longer and longer)
 		- Fixes [#335](https://github.com/bevry/docpad/issues/335)
