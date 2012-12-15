@@ -23,7 +23,10 @@ module.exports = (BasePlugin) ->
 			renderPartialFailed: "Rendering partial failed: %s. The error follows:"
 
 		# A list of all the partials we've discovered
-		foundPartials: null  # Object
+		foundPartials: null  # Array
+
+		# For cacheable partials, cache them here
+		partialsCache: null  # Object
 
 		# Prepare our Configuration
 		constructor: ->
@@ -36,7 +39,8 @@ module.exports = (BasePlugin) ->
 			config.partialsPath = pathUtil.resolve(docpad.config.srcPath, config.partialsPath)
 
 			# Create our found partials object
-			@foundPartials = {}
+			@foundPartials = []
+			@partialsCache = {}
 
 
 		# -----------------------------
@@ -60,7 +64,7 @@ module.exports = (BasePlugin) ->
 				container: "[partial:#{id}]"
 
 			# Store it for later
-			@foundPartials[id] = partial
+			@foundPartials.push partial
 
 			# Return the partial's container
 			return partial.container
@@ -73,6 +77,8 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			docpad = @docpad
 			locale = @locale
+			partialsCache = @partialsCache
+			result = null
 
 			# Check the partial exists
 			partial.document ?= docpad.getCollection('partials').fuzzyFindOne(partial.path)
@@ -83,10 +89,27 @@ module.exports = (BasePlugin) ->
 				err = new Error(message)
 				return next(err)  if err
 
-			# Render
-			docpad.renderDocument partial.document, {templateData:partial.data}, (err,result,document) ->
-				return next(err)  if err
+			# Check if our partial is cacheable
+			cacheable = partial.document.getMeta().get('cacheable') ? false
+			if cacheable is true
+				result = partialsCache[partial.path] ? null
+
+			# Got from cache, so use that
+			if result?
 				return next(null,result)
+
+			# Render
+			else
+				docpad.renderDocument partial.document, {templateData:partial.data}, (err,result,document) ->
+					# Check
+					return next(err)  if err
+
+					# Cache
+					if cacheable is true
+						partialsCache[partial.path] = result
+
+					# Forward
+					return next(null,result)
 
 			# Chain
 			@
@@ -211,4 +234,5 @@ module.exports = (BasePlugin) ->
 		# Generate After
 		# Reset the found partials after each generate, otherwise it will get very big
 		generateAfter: ->
-			@foundPartials = {}
+			@foundPartials = []
+			@partialsCache = {}

@@ -1,5 +1,10 @@
 ## History
 
+- v2.4.0 December 15, 2012
+	- Removed the possibility of name collisions when storing partial info
+	- You can now cache a partial by setting `cacheable: true` in the partial's meta data
+		- Doing this will only render it once per (re)generation. Cache is cleared after each (re)generation.
+
 - v2.3.0 November 23, 2012
 	- New way of doing partials
 		- Should be faster

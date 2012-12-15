@@ -17,6 +17,7 @@ To use, first create the `src/partials` directory, and place any partials you wa
 
 Then in our templates we will be exposed with the `@partial(filename,data)` function. The `data` argument is optional, and can be used to send custom data to the partial's template data. If you would like to send over the current document's template data, then do the following `@partial(filename,@,data)`.
 
+If your partial only needs to be rendered once per (re)generation then you can specify `cacheable: true` in the partial's meta data, doing so greatly improves performance.
 
 ### Example
 
