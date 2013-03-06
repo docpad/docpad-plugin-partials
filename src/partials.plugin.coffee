@@ -28,19 +28,34 @@ module.exports = (BasePlugin) ->
 		# For cacheable partials, cache them here
 		partialsCache: null  # Object
 
+
+		# -----------------------------
+		# Initialize
+
 		# Prepare our Configuration
 		constructor: ->
 			# Prepare
 			super
-			docpad = @docpad
-			config = @config
 
-			# Resolve our partialsPath
-			config.partialsPath = pathUtil.resolve(docpad.config.srcPath, config.partialsPath)
-
-			# Create our found partials object
+			# Creatte our found partials object
 			@foundPartials = []
 			@partialsCache = {}
+
+			# DocPad -v6.24.0 Compatible
+			@config.partialsPath = pathUtil.resolve(@docpad.getConfig().srcPath, @config.partialsPath)
+
+
+		# DocPad v6.24.0+ Compatible
+		# Configuration
+		setConfig: ->
+			# Prepare
+			super
+
+			# Adjust
+			@config.partialsPath = pathUtil.resolve(@docpad.getConfig().srcPath, @config.partialsPath)
+
+			# Chain
+			@
 
 
 		# -----------------------------
@@ -177,7 +192,6 @@ module.exports = (BasePlugin) ->
 
 			# Chain
 			@
-
 
 		# Render the Document
 		# Render our partials

@@ -1,5 +1,12 @@
 ## History
 
+- v2.5.0 March 7, 2013
+	- DocPad v6.24.0 support
+	- Repackaged
+	- Dependency upgrades
+		-  `bal-util` from 1.15.x to ~1.16.8
+		-  `coffee-script` from 1.4.x to ~1.4.0
+
 - v2.4.0 December 15, 2012
 	- Removed the possibility of name collisions when storing partial info
 	- You can now cache a partial by setting `cacheable: true` in the partial's meta data

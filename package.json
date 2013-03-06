@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-partials",
-	"version": "2.4.0",
+	"version": "2.5.0",
 	"description": "Adds support for Partials (re-usable templates) to DocPad",
 	"homepage": "http://docpad.org/plugin/partials",
 	"keywords": [
@@ -14,10 +14,10 @@
 	],
 	"author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
 	"maintainers": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
 	],
 	"contributors": [
-		"Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
 	],
 	"bugs": {
 		"url": "https://github.com/bevry/docpad-extras/issues"
@@ -27,17 +27,17 @@
 		"url": "http://github.com/bevry/docpad-extras.git"
 	},
 	"engines" : {
-		"node": ">=0.4.0",
-		"docpad": ">=6.11.2 <7.0.0"
+		"node": ">=0.4",
+		"docpad": ">=6.11.2 <7"
 	},
 	"dependencies": {
-		"bal-util": "1.15.x"
+		"bal-util": "~1.16.8"
 	},
 	"devDependencies": {
-		"coffee-script": "1.4.x"
+		"coffee-script": "~1.4.0"
 	},
 	"main": "./out/partials.plugin.js",
 	"scripts": {
-		"test": "node ./test/partials.test.js"
+		"test": "node ./out/partials.test.js"
 	}
 }
