@@ -1,5 +1,8 @@
 ## History
 
+- v2.5.1 April 1, 2013
+	- Dependency upgrades
+
 - v2.5.0 March 7, 2013
 	- DocPad v6.24.0 support
 	- Repackaged

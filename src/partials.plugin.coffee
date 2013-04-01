@@ -1,7 +1,9 @@
 # Export Plugin
 module.exports = (BasePlugin) ->
 	# Requires
-	balUtil = require('bal-util')
+	eachr = require('eachr')
+	extendr = require('extendr')
+	TaskGroup = require('taskgroup')
 	pathUtil = require('path')
 	util = require('util')
 
@@ -183,7 +185,7 @@ module.exports = (BasePlugin) ->
 				# Extend
 				if objs.length >= 2
 					objs.unshift({})
-					data = balUtil.shallowExtendPlainObjects(objs...)
+					data = extendr.shallowExtendPlainObjects(objs...)
 				else
 					data = objs[0] ? {}
 
@@ -207,10 +209,10 @@ module.exports = (BasePlugin) ->
 			foundPartials = @foundPartials
 
 			# Async
-			tasks = new balUtil.Group(next)
+			tasks = new TaskGroup(next)
 
 			# Store all our files to be cached
-			balUtil.each foundPartials, (partial) ->
+			eachr foundPartials, (partial) ->
 				tasks.push (complete) ->
 					# Check if we use this partial
 					# if we don't, then skip this partial
