@@ -208,7 +208,7 @@ module.exports = (BasePlugin) ->
 			foundPartials = @foundPartials
 
 			# Async
-			tasks = new TaskGroup().setConfig(concurrency:0).on('complete',next)
+			tasks = new TaskGroup().setConfig(concurrency:0).once('complete',next)
 
 			# Store all our files to be cached
 			foundPartials.forEach (partial) ->
