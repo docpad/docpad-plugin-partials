@@ -1,9 +1,8 @@
 # Export Plugin
 module.exports = (BasePlugin) ->
 	# Requires
-	eachr = require('eachr')
 	extendr = require('extendr')
-	TaskGroup = require('taskgroup')
+	{TaskGroup} = require('taskgroup')
 	pathUtil = require('path')
 	util = require('util')
 
@@ -81,7 +80,7 @@ module.exports = (BasePlugin) ->
 				container: "[partial:#{id}]"
 
 			# Store it for later
-			@foundPartials.push partial
+			@foundPartials.push(partial)
 
 			# Return the partial's container
 			return partial.container
@@ -209,11 +208,11 @@ module.exports = (BasePlugin) ->
 			foundPartials = @foundPartials
 
 			# Async
-			tasks = new TaskGroup(next)
+			tasks = new TaskGroup().setConfig(concurrency:0).on('complete',next)
 
 			# Store all our files to be cached
-			eachr foundPartials, (partial) ->
-				tasks.push (complete) ->
+			foundPartials.forEach (partial) ->
+				tasks.addTask (complete) ->
 					# Check if we use this partial
 					# if we don't, then skip this partial
 					if opts.content.indexOf(partial.container) is -1
@@ -242,7 +241,7 @@ module.exports = (BasePlugin) ->
 						return complete()
 
 			# Fire the tasks together
-			tasks.async()
+			tasks.run()
 
 			# Chain
 			@
