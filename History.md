@@ -1,5 +1,9 @@
 ## History
 
+- v2.6.0 April 6, 2013
+	- Partials now begin rendering as soon as we receive them
+	- Dependency upgrades
+
 - v2.5.1 April 1, 2013
 	- Dependency upgrades
 
