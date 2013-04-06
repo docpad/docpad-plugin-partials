@@ -4,6 +4,9 @@
 	- Partials now begin rendering as soon as we receive them
 	- Dependency upgrades
 
+- v2.5.2 April 5, 2013
+	- Dependency upgrades
+
 - v2.5.1 April 1, 2013
 	- Dependency upgrades
 
