@@ -3,7 +3,7 @@ module.exports = (BasePlugin) ->
 	# Requires
 	eachr = require('eachr')
 	extendr = require('extendr')
-	TaskGroup = require('taskgroup')
+	{TaskGroup} = require('taskgroup')
 	pathUtil = require('path')
 	util = require('util')
 
@@ -24,10 +24,8 @@ module.exports = (BasePlugin) ->
 			renderedPartial: "Rendered partial: %s"
 			renderPartialFailed: "Rendering partial failed: %s. The error follows:"
 
-		# A list of all the partials we've discovered
-		foundPartials: null  # Array
-
-		# For cacheable partials, cache them here
+		# Partial helpers
+		foundPartials: null  # Object
 		partialsCache: null  # Object
 
 
@@ -40,8 +38,8 @@ module.exports = (BasePlugin) ->
 			super
 
 			# Creatte our found partials object
-			@foundPartials = []
 			@partialsCache = {}
+			@foundPartials = {}
 
 			# DocPad -v6.24.0 Compatible
 			@config.partialsPath = pathUtil.resolve(@docpad.getConfig().srcPath, @config.partialsPath)
@@ -55,78 +53,6 @@ module.exports = (BasePlugin) ->
 
 			# Adjust
 			@config.partialsPath = pathUtil.resolve(@docpad.getConfig().srcPath, @config.partialsPath)
-
-			# Chain
-			@
-
-
-		# -----------------------------
-		# Helpers
-
-		# Render Partial Sync
-		# Mapped to templateData.partial
-		# Takes in a partialId and it's data and returns a temporary container
-		# which will be replaced later when we've finished rendering our partial
-		renderPartialSync: (name,data) ->
-			# Prepare
-			config = @config
-
-			# Prepare our partials entry
-			id = Math.random()
-			partial =
-				id: id
-				name: name
-				data: data
-				path: pathUtil.join(config.partialsPath, name)
-				container: "[partial:#{id}]"
-
-			# Store it for later
-			@foundPartials.push partial
-
-			# Return the partial's container
-			return partial.container
-
-
-		# Render Partial
-		# Render a partial asynchronously
-		# next(err,result,document)
-		renderPartial: (partial,next) ->
-			# Prepare
-			docpad = @docpad
-			locale = @locale
-			partialsCache = @partialsCache
-			result = null
-
-			# Check the partial exists
-			partial.document ?= docpad.getCollection('partials').fuzzyFindOne(partial.path)
-
-			# If it doesn't, warn
-			unless partial.document
-				message = util.format(locale.partialNotFound, partial.name)
-				err = new Error(message)
-				return next(err)  if err
-
-			# Check if our partial is cacheable
-			cacheable = partial.document.getMeta().get('cacheable') ? false
-			if cacheable is true
-				result = partialsCache[partial.path] ? null
-
-			# Got from cache, so use that
-			if result?
-				return next(null,result)
-
-			# Render
-			else
-				docpad.renderDocument partial.document, {templateData:partial.data}, (err,result,document) ->
-					# Check
-					return next(err)  if err
-
-					# Cache
-					if cacheable is true
-						partialsCache[partial.path] = result
-
-					# Forward
-					return next(null,result)
 
 			# Chain
 			@
@@ -171,26 +97,89 @@ module.exports = (BasePlugin) ->
 			# Chain
 			@
 
+		# -----------------------------
+		# Rendering
+
+		# Render Partial
+		# Render a partial asynchronously
+		# next(err,result,document)
+		renderPartial: (partial,next) ->
+			# Prepare
+			docpad = @docpad
+			locale = @locale
+			partialsCache = @partialsCache
+			result = null
+
+			# Check if our partial is cacheable
+			cacheable = partial.document.getMeta().get('cacheable') ? false
+			if cacheable is true
+				result = partialsCache[partial.path] ? null
+
+			# Got from cache, so use that
+			return next(null,result)  if result?
+
+			# Render
+			docpad.renderDocument partial.document, {templateData:partial.data}, (err,result,document) ->
+				# Check
+				return next(err)  if err
+
+				# Cache
+				if cacheable is true
+					partialsCache[partial.path] = result
+
+				# Forward
+				return next(null,result)
+
+			# Chain
+			@
+
 		# Extend Template Data
 		# Inject our partial methods
 		extendTemplateData: ({templateData}) ->
 			# Prepare
 			me = @
+			{docpad,locale,config} = @
 
 			# Apply
-			templateData.partial = (name,objs...) ->
+			templateData.partial = (partialName,objs...) ->
 				# Reference others
 				@referencesOthers?()
 
-				# Extend
-				if objs.length >= 2
-					objs.unshift({})
-					data = extendr.shallowExtendPlainObjects(objs...)
-				else
-					data = objs[0] ? {}
+				# Prepare
+				file = @documentModel
+				partial = {}
 
-				# Render sync
-				return me.renderPartialSync(name,data)
+				# Fetch our partial
+				partialFuzzyPath = pathUtil.join(config.partialsPath, partialName)
+				partial.document ?= docpad.getCollection('partials').fuzzyFindOne(partialFuzzyPath)
+				unless partial.document
+					# Partial was not found
+					message = util.format(locale.partialNotFound, partialName)
+					err = new Error(message)
+					partial.err = err
+					return message
+
+				# Fetch our partial data
+				partial.data =
+					if objs.length >= 2
+						objs.unshift({})
+						extendr.shallowExtendPlainObjects(objs...)
+					else
+						objs[0] ? {}
+
+				# Prepare our partial id
+				partial.id = Math.random() # require('crypto').createHash('md5').update(partial.document.id+'|'+JSON.stringify(partial.data)).digest('hex')
+				partial.container = '[partial:'+partial.id+']'
+
+				# Check if a partial with this id already exists!
+				if me.foundPartials[partial.id]
+					return partial.container
+
+				# Store the partial
+				me.foundPartials[partial.id] = partial
+
+				# Return the container
+				return partial.container
 
 			# Chain
 			@
@@ -203,46 +192,38 @@ module.exports = (BasePlugin) ->
 
 			# Prepare
 			me = @
-			docpad = @docpad
-			locale = @locale
-			config = @config
-			foundPartials = @foundPartials
+			partialsToRender = []
 
-			# Async
-			tasks = new TaskGroup(next)
+			# Find the partials
+			opts.content = opts.content.replace /\[partial:([^\]]+)\]/g, (match,p1) ->
+				partial = me.foundPartials[p1]
+				return partial.result  if partial.result
+				partialsToRender.push(partial)
+				return match
 
-			# Store all our files to be cached
-			eachr foundPartials, (partial) ->
-				tasks.push (complete) ->
-					# Check if we use this partial
-					# if we don't, then skip this partial
-					if opts.content.indexOf(partial.container) is -1
-						return complete()
+			# Check
+			return next()  if partialsToRender.length is 0
 
-					# Log
-					docpad.log('debug', util.format(locale.renderPartial, partial.name))
+			# Otherwise render
+			partialsRunner = new TaskGroup().setConfig(concurrency:0).once('complete',next)
 
-					# Render
-					me.renderPartial partial, (err,contentRendered) ->
-						# Check
-						if err
-							# Warn
-							message = util.format(locale.renderPartialFailed, partial.name)
-							docpad.warn(message, err)
+			# Add the rendering tasks
+			partialsToRender.forEach (partial) ->
+				partialsRunner.addTask (complete) ->
+					# Render partial
+					me.renderPartial partial, (err,result) ->
+						# Store result
+						partial.err = err
+						partial.result = result ? err.toString()
 
-						# Replace container with the rendered content
-						else
-							# Log
-							docpad.log('debug', util.format(locale.renderedPartial, partial.name))
+						# Replace
+						opts.content = opts.content.replace(partial.container, partial.result)
 
-							# Apply
-							opts.content = opts.content.replace(partial.container,contentRendered)
+						# Complete
+						complete()
 
-						# Done
-						return complete()
-
-			# Fire the tasks together
-			tasks.async()
+			# Execute the rendeirng taks
+			partialsRunner.run()
 
 			# Chain
 			@
@@ -250,5 +231,5 @@ module.exports = (BasePlugin) ->
 		# Generate After
 		# Reset the found partials after each generate, otherwise it will get very big
 		generateAfter: ->
-			@foundPartials = []
+			@foundPartials = {}
 			@partialsCache = {}
