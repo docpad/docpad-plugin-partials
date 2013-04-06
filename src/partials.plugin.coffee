@@ -1,9 +1,8 @@
 # Export Plugin
 module.exports = (BasePlugin) ->
 	# Requires
-	eachr = require('eachr')
 	extendr = require('extendr')
-	{TaskGroup} = require('taskgroup')
+	{Task,TaskGroup} = require('taskgroup')
 	pathUtil = require('path')
 	util = require('util')
 
@@ -178,6 +177,14 @@ module.exports = (BasePlugin) ->
 				# Store the partial
 				me.foundPartials[partial.id] = partial
 
+				# Start rendering the partial
+				partial.task ?= new Task (complete) ->
+					me.renderPartial partial, (err,result) ->
+						partial.err = err
+						partial.result = result ? err?.toString() or '???'
+						return complete()
+				partial.task.run()
+
 				# Return the container
 				return partial.container
 
@@ -190,40 +197,36 @@ module.exports = (BasePlugin) ->
 			# Prepare
 			{templateData,file} = opts
 
+			# Check
+			partialContainerRegex = /\[partial:([^\]]+)\]/g
+			partialContainers = opts.content.match(partialContainerRegex) or []
+			return next()  if partialContainers.length is 0
+
 			# Prepare
 			me = @
-			partialsToRender = []
+			tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', ->
+				# Replace containers with results
+				opts.content = opts.content.replace partialContainerRegex, (match,partialId) ->
+					# Fetch partial
+					partial = me.foundPartials[partialId]
 
-			# Find the partials
-			opts.content = opts.content.replace /\[partial:([^\]]+)\]/g, (match,p1) ->
-				partial = me.foundPartials[p1]
-				return partial.result  if partial.result
-				partialsToRender.push(partial)
-				return match
+					# Return result
+					return partial.result
 
-			# Check
-			return next()  if partialsToRender.length is 0
+				# Complete
+				next()
 
-			# Otherwise render
-			partialsRunner = new TaskGroup().setConfig(concurrency:0).once('complete',next)
+			# Wait for found partials to complete rendering
+			partialContainers.forEach (partialContainer) ->
+				# Fetch partial
+				partialId = partialContainer.replace(partialContainerRegex,'$1')
+				partial = me.foundPartials[partialId]
 
-			# Add the rendering tasks
-			partialsToRender.forEach (partial) ->
-				partialsRunner.addTask (complete) ->
-					# Render partial
-					me.renderPartial partial, (err,result) ->
-						# Store result
-						partial.err = err
-						partial.result = result ? err.toString()
+				# Wait for all the partials to complete rendering
+				tasks.addTask (complete) -> partial.task.once('complete',complete).complete()
 
-						# Replace
-						opts.content = opts.content.replace(partial.container, partial.result)
-
-						# Complete
-						complete()
-
-			# Execute the rendeirng taks
-			partialsRunner.run()
+			# Run the tasks
+			tasks.run()
 
 			# Chain
 			@
