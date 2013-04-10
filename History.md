@@ -1,5 +1,9 @@
 ## History
 
+- v2.6.1 April 6, 2013
+	- Fixed `???` being outputted for empty partials (bug introduced in v2.6.0)
+		- Closes [issue #5](https://github.com/docpad/docpad-plugin-partials/issues/5) and [pull request #6](https://github.com/docpad/docpad-plugin-partials/pull/6) thanks to [Bob VanderClay](https://github.com/takitapart) and [Bruno Héridet](https://github.com/Delapouite)
+
 - v2.6.0 April 6, 2013
 	- Partials now begin rendering as soon as we receive them
 	- Dependency upgrades

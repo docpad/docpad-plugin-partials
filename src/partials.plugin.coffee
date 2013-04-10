@@ -181,7 +181,7 @@ module.exports = (BasePlugin) ->
 				partial.task ?= new Task (complete) ->
 					me.renderPartial partial, (err,result) ->
 						partial.err = err
-						partial.result = result ? err?.toString() or ''
+						partial.result = result ? err?.toString() ? '???'
 						return complete()
 				partial.task.run()
 

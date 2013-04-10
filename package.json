@@ -1,6 +1,6 @@
 {
 	"name": "docpad-plugin-partials",
-	"version": "2.6.0",
+	"version": "2.6.1",
 	"description": "Adds support for Partials (re-usable templates) to DocPad",
 	"homepage": "http://docpad.org/plugin/partials",
 	"keywords": [
@@ -17,7 +17,9 @@
 		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
 	],
 	"contributors": [
-		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+		"Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
+		"Bob VanderClay (https://github.com/takitapart)",
+		"Bruno Héridet (https://github.com/Delapouite)"
 	],
 	"bugs": {
 		"url": "https://github.com/bevry/docpad-extras/issues"
