@@ -112,7 +112,7 @@ module.exports = (BasePlugin) ->
 			# Check if our partial is cacheable
 			cacheable = partial.document.getMeta().get('cacheable') ? false
 			if cacheable is true
-				result = partialsCache[partial.path] ? null
+				result = partialsCache[partial.code] ? null
 
 			# Got from cache, so use that
 			return next(null,result)  if result?
@@ -124,7 +124,7 @@ module.exports = (BasePlugin) ->
 
 				# Cache
 				if cacheable is true
-					partialsCache[partial.path] = result
+					partialsCache[partial.code] = result
 
 				# Forward
 				return next(null,result)
@@ -167,7 +167,8 @@ module.exports = (BasePlugin) ->
 						objs[0] ? {}
 
 				# Prepare our partial id
-				partial.id = Math.random() # require('crypto').createHash('md5').update(partial.document.id+'|'+JSON.stringify(partial.data)).digest('hex')
+				partial.code = partial.document.id
+				partial.id = Math.random() # require('crypto').createHash('md5').update(partial.code+'|'+JSON.stringify(partial.data)).digest('hex')
 				partial.container = '[partial:'+partial.id+']'
 
 				# Check if a partial with this id already exists!
