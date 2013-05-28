@@ -1,5 +1,8 @@
 ## History
 
+- v2.6.3 May 28, 2013
+	- Fixed `Cannot call method 'match' of null`
+
 - v2.6.2 April 17, 2013
 	- Fixed cacheable partials (broke in v2.6.0)
 

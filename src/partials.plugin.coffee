@@ -200,7 +200,7 @@ module.exports = (BasePlugin) ->
 
 			# Check
 			partialContainerRegex = /\[partial:([^\]]+)\]/g
-			partialContainers = opts.content.match(partialContainerRegex) or []
+			partialContainers = (opts.content or '').match(partialContainerRegex) or []
 			return next()  if partialContainers.length is 0
 
 			# Prepare
