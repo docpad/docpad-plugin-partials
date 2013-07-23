@@ -1,5 +1,8 @@
 ## History
 
+- v2.7.0 July 23, 2013
+	- Updated for DocPad v6.46
+
 - v2.6.3 May 28, 2013
 	- Fixed `Cannot call method 'match' of null`
 

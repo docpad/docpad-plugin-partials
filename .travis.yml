@@ -1,0 +1,22 @@
+# v1.1.1 June 25, 2013
+# This file was originally created by Benjamin Lupton <b@lupton.cc> (http://balupton.com)
+# and is currently licensed under the Creative Commons Zero (http://creativecommons.org/publicdomain/zero/1.0/)
+# making it public domain so you can do whatever you wish with it without worry (you can even remove this notice!)
+#
+# If you change something here, be sure to reflect the changes in:
+# - the Cakefile
+# - the scripts section of the package.json file
+# - the .travis.yml file
+language: node_js
+before_script: "./node_modules/.bin/cake test-setup"
+script: "npm test"
+node_js:
+  - "0.8"
+  - "0.10"
+notifications:
+  irc:
+    - "irc.freenode.org#bevry-dev"
+    - "irc.freenode.org#docpad-dev"
+  email:
+    recipients:
+      - travisci@bevry.me

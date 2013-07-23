@@ -67,7 +67,12 @@ module.exports = (BasePlugin) ->
 			docpad = @docpad
 
 			# Load our partials directory
-			docpad.parseDocumentDirectory({path:config.partialsPath}, next)
+			docpad.parseDirectory({
+				path: config.partialsPath
+				collection: docpad.getDatabase()
+				createFunction: docpad.createDocument
+				next: next
+			})
 
 			# Chain
 			@
