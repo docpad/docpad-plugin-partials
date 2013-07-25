@@ -93,9 +93,11 @@ module.exports = (BasePlugin) ->
 				})
 				.on('add', (model) ->
 					docpad.log('debug', util.format(locale.addingPartial, model.attributes.fullPath))
-					model.attributes.isPartial ?= true
-					model.attributes.render ?= false
-					model.attributes.write ?= false
+					model.setDefaults(
+						isPartial: true
+						render: false
+						write: false
+					)
 				)
 
 			# Chain

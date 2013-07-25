@@ -1,5 +1,8 @@
 ## History
 
+- v2.7.1 July 25, 2013
+	- Updated for DocPad v6.46.2
+
 - v2.7.0 July 23, 2013
 	- Updated for DocPad v6.46
 
