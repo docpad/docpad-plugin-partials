@@ -1,5 +1,9 @@
 ## History
 
+- v2.7.2 July 30, 2013
+	- You can now customise the collection name via the `collectioName` option
+	- Updated some older docpad api conventions for their newer equilevants
+
 - v2.7.1 July 25, 2013
 	- Updated for DocPad v6.46.2
 

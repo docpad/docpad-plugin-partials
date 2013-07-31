@@ -14,6 +14,7 @@ module.exports = (BasePlugin) ->
 		# Default Configuration
 		config:
 			partialsPath: 'partials'
+			collectionName: 'partials'
 
 		# Locale
 		locale:
@@ -35,13 +36,15 @@ module.exports = (BasePlugin) ->
 		constructor: ->
 			# Prepare
 			super
+			docpadConfig = @docpad.getConfig()
+			config = @getConfig()
 
 			# Creatte our found partials object
 			@partialsCache = {}
 			@foundPartials = {}
 
 			# DocPad -v6.24.0 Compatible
-			@config.partialsPath = pathUtil.resolve(@docpad.getConfig().srcPath, @config.partialsPath)
+			config.partialsPath = pathUtil.resolve(docpadConfig.srcPath, config.partialsPath)
 
 
 		# DocPad v6.24.0+ Compatible
@@ -49,9 +52,11 @@ module.exports = (BasePlugin) ->
 		setConfig: ->
 			# Prepare
 			super
+			docpadConfig = @docpad.getConfig()
+			config = @getConfig()
 
 			# Adjust
-			@config.partialsPath = pathUtil.resolve(@docpad.getConfig().srcPath, @config.partialsPath)
+			config.partialsPath = pathUtil.resolve(docpadConfig.srcPath, config.partialsPath)
 
 			# Chain
 			@
@@ -67,12 +72,7 @@ module.exports = (BasePlugin) ->
 			docpad = @docpad
 
 			# Load our partials directory
-			docpad.parseDirectory({
-				path: config.partialsPath
-				collection: docpad.getDatabase()
-				createFunction: docpad.createDocument
-				next: next
-			})
+			docpad.parseDocumentDirectory({path: config.partialsPath}, next)
 
 			# Chain
 			@
@@ -80,19 +80,20 @@ module.exports = (BasePlugin) ->
 		# Extend Collections
 		extendCollections: (opts) ->
 			# Prepare
-			config = @config
+			config = @getConfig()
 			docpad = @docpad
 			locale = @locale
+			database = docpad.getDatabase()
 
 			# Add our partials collection
-			docpad.setCollection 'partials', docpad.database.createLiveChildCollection()
-				.setQuery('isLayout', {
+			docpad.setCollection config.collectionName, database.createLiveChildCollection()
+				.setQuery('isPartial', {
 					$or:
 						isPartial: true
 						fullPath: $startsWith: config.partialsPath
 				})
 				.on('add', (model) ->
-					docpad.log('debug', util.format(locale.addingPartial, model.attributes.fullPath))
+					docpad.log('debug', util.format(locale.addingPartial, model.getFilePath()))
 					model.setDefaults(
 						isPartial: true
 						render: false
@@ -122,7 +123,7 @@ module.exports = (BasePlugin) ->
 				result = partialsCache[partial.code] ? null
 
 			# Got from cache, so use that
-			return next(null,result)  if result?
+			return next(null, result)  if result?
 
 			# Render
 			docpad.renderDocument partial.document, {templateData:partial.data}, (err,result,document) ->
@@ -134,7 +135,7 @@ module.exports = (BasePlugin) ->
 					partialsCache[partial.code] = result
 
 				# Forward
-				return next(null,result)
+				return next(null, result)
 
 			# Chain
 			@
@@ -144,7 +145,9 @@ module.exports = (BasePlugin) ->
 		extendTemplateData: ({templateData}) ->
 			# Prepare
 			me = @
-			{docpad,locale,config} = @
+			docpad = @docpad
+			locale = @locale
+			config = @getConfig()
 
 			# Apply
 			templateData.partial = (partialName,objs...) ->
