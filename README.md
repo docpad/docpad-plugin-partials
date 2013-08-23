@@ -27,14 +27,14 @@ Then call the new `partial(filename, objs...)` template helper to include the pa
 
 Lets say we have the partial `src/partials/hello.html.eco` that includes:
 
-```
+``` html
 Hello <%=@name or 'World'%>
 Welcome to <%= @site?.name or 'My Site' %>
 ```
 
 And a [docpad configuration file](http://docpad.org) file that includes:
 
-```
+``` coffee
 templateData:
 	site:
 		name: "Ben's Awesome Site"
@@ -42,11 +42,11 @@ templateData:
 
 We could then render via a `src/documents/index.html.eco` document in these different ways:
 
-```
+``` html
 <!-- Include the rendered contents of `src/partials/my-partial` file -->
 <!-- and send over the template data -->
 <%- @partial('hello') %>
-<!-- we'll get back:
+<!-- gives us:
 Hello World
 Welcome to Ben's Awesome Site
 -->
@@ -55,7 +55,7 @@ Welcome to Ben's Awesome Site
 <!-- and send over the template data -->
 <!-- and send over our own custom template data -->
 <%- @partial('hello', {name:'Ben'}) %>
-<!-- we'll get back:
+<!-- gives us:
 Hello Ben
 Welcome to Ben's Awesome Site
 -->
@@ -63,7 +63,7 @@ Welcome to Ben's Awesome Site
 <!-- Include the rendered contents of `src/partials/my-partial` file -->
 <!-- and DO NOT send over the template data -->
 <%- @partial('hello', false}) %>
-<!-- we'll get back:
+<!-- gives us:
 Hello World
 Welcome to My Site
 -->
@@ -72,7 +72,7 @@ Welcome to My Site
 <!-- and DO NOT send over the template data -->
 <!-- and send over ONLY our own custom template data -->
 <%- @partial('hello', false, {name:'Ben'}) %>
-<!-- we'll get back:
+<!-- gives us:
 Hello Ben
 Welcome to My Site
 -->
@@ -81,7 +81,7 @@ Welcome to My Site
 <!-- and DO NOT send over the template data -->
 <!-- and send over our own custom template data with the template data site property -->
 <%- @partial('hello', false, {site:{name:@site.name}}, {name:'Ben'}) %>
-<!-- we'll get back:
+<!-- gives us:
 Hello Ben
 Welcome to Ben's Awesome Site
 -->
