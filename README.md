@@ -42,7 +42,7 @@ templateData:
 
 We could then render via a `src/documents/index.html.eco` document in these different ways:
 
-``` erb
+```
 <!-- Include the rendered contents of `src/partials/my-partial` file -->
 <!-- and send over the template data -->
 <%- @partial('hello') %>
@@ -94,7 +94,7 @@ To increase performance it is recommended you only include the exact template da
 
 If your partial only needs to be rendered once per (re)generation then you can specify `cacheable: true` in the partial's meta data, doing so greatly improves performance.
 
-Partials actually render asynchronously, when you call `<%- @partial('hello') %>` you'll actually get back something a temporary placeholder like `[partial:0.1290219301293]` while your template is rendering, then once your template has rendered, and once all the partials have rendered, we will then go through and replace these placeholder values with the correct content. We must do this as template rendering is a synchronous process whereas document rendering is an asynchronous process.
+Partials actually render asynchronously, when you call `<%- @partial('hello') %>` you'll actually get back something a temporary placeholder like `[partial:0.1290219301293]` while your template is rendering, then once your template has rendered, and once all the partials have rendered, we will then go through and replace these placeholder values with the correct content. We must do this as template rendering is a synchronous process whereas document rendering is an asynchronous process. [More info here.](https://github.com/docpad/docpad-plugin-partials/issues/12)
 
 
 ### Compatibility
