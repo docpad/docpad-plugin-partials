@@ -105,11 +105,11 @@ Partials actually render asynchronously, when you call `<%- @partial('hello') %>
 
 
 ## History
-[You can discover the history inside the `History.md` file](https://github.com/bevry/docpad-plugin-partials/blob/master/History.md#files)
+[You can discover the history inside the `History.md` file](https://github.com/docpad/docpad-plugin-partials/blob/master/History.md#files)
 
 
 ## Contributing
-[You can discover the contributing instructions inside the `Contributing.md` file](https://github.com/bevry/docpad-plugin-partials/blob/master/Contributing.md#files)
+[You can discover the contributing instructions inside the `Contributing.md` file](https://github.com/docpad/docpad-plugin-partials/blob/master/Contributing.md#files)
 
 
 ## License
