@@ -2,16 +2,35 @@
 title: 'Partials Test'
 ---
 
+<!-- with template data -->
 <%- @partial('header.html.eco') %>
 
-<%- @partial('header.html') %>
-
+<!-- with template data -->
 <%- @partial('header.html.eco', @) %>
 
-<%- @partial('header.html.eco', {name:'Partials!'}) %>
+<!-- with template data -->
+<%- @partial('header.html.eco', true) %>
 
+<!-- WITHOUT template data -->
+<%- @partial('header.html.eco', false) %>
+
+<!-- with template data and custom name -->
 <%- @partial('header.html.eco', @, {name:'Partials!'}) %>
 
+<!-- with template data and custom name -->
+<%- @partial('header.html.eco', {name:'Partials!'}) %>
+
+<!-- with template data and custom name -->
+<%- @partial('header.html.eco', true, {name:'Partials!'}) %>
+
+<!-- WITHOUT template data and custom name -->
+<%- @partial('header.html.eco', false, {name:'Partials!'}) %>
+
+<!-- with template data via fuzzy -->
+<%- @partial('header.html') %>
+
+<!-- footer -->
 <%- @partial('footer.html') %>
 
+<!-- empty -->
 <%- @partial('empty.html') %>

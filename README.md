@@ -18,20 +18,90 @@ docpad install partials
 
 ## Usage
 
-### Setup
+Create the `src/partials` directory, and place any partials you want to use in there.
 
-To use, first create the `src/partials` directory, and place any partials you want to use in there.
+Then call the new `partial(filename, objs...)` template helper to include the partial. The object arguments are optional, and can be used to send custom data to the partial's template data. Setting the first object argument to `false` will not send over the template data by default.
 
-Then in our templates we will be exposed with the `@partial(filename,data)` function. The `data` argument is optional, and can be used to send custom data to the partial's template data. If you would like to send over the current document's template data, then do the following `@partial(filename,@,data)`.
+
+### Examples
+
+Lets say we have the partial `src/partials/hello.html.eco` that includes:
+
+```
+Hello <%=@name or 'World'%>
+Welcome to <%= @site?.name or 'My Site' %>
+```
+
+And a [docpad configuration file](http://docpad.org) file that includes:
+
+```
+templateData:
+	site:
+		name: "Ben's Awesome Site"
+```
+
+We could then render via a `src/documents/index.html.eco` document in these different ways:
+
+``` erb
+<!-- Include the rendered contents of `src/partials/my-partial` file -->
+<!-- and send over the template data -->
+<%- @partial('hello') %>
+<!-- we'll get back:
+Hello World
+Welcome to Ben's Awesome Site
+-->
+
+<!-- Include the rendered contents of `src/partials/my-partial` file -->
+<!-- and send over the template data -->
+<!-- and send over our own custom template data -->
+<%- @partial('hello', {name:'Ben'}) %>
+<!-- we'll get back:
+Hello Ben
+Welcome to Ben's Awesome Site
+-->
+
+<!-- Include the rendered contents of `src/partials/my-partial` file -->
+<!-- and DO NOT send over the template data -->
+<%- @partial('hello', false}) %>
+<!-- we'll get back:
+Hello World
+Welcome to My Site
+-->
+
+<!-- Include the rendered contents of `src/partials/my-partial` file -->
+<!-- and DO NOT send over the template data -->
+<!-- and send over ONLY our own custom template data -->
+<%- @partial('hello', false, {name:'Ben'}) %>
+<!-- we'll get back:
+Hello Ben
+Welcome to My Site
+-->
+
+<!-- Include the rendered contents of `src/partials/my-partial` file -->
+<!-- and DO NOT send over the template data -->
+<!-- and send over our own custom template data with the template data site property -->
+<%- @partial('hello', false, {site:{name:@site.name}}, {name:'Ben'}) %>
+<!-- we'll get back:
+Hello Ben
+Welcome to Ben's Awesome Site
+-->
+```
+
+
+### Notes
+
+To increase performance it is recommended you only include the exact template data variables that you need - this is because sending over all the template data can be a costly process as we much destroy all references (do a deep clone) to avoid reference conflicts and over-writes between each render - so sending over as little / as specific data as possible means less reference destroying which means faster processing.
 
 If your partial only needs to be rendered once per (re)generation then you can specify `cacheable: true` in the partial's meta data, doing so greatly improves performance.
 
-### Example
+Partials actually render asynchronously, when you call `<%- @partial('hello') %>` you'll actually get back something a temporary placeholder like `[partial:0.1290219301293]` while your template is rendering, then once your template has rendered, and once all the partials have rendered, we will then go through and replace these placeholder values with the correct content. We must do this as template rendering is a synchronous process whereas document rendering is an asynchronous process.
 
-For instance we could create the file `src/partials/hello.html.md.eco` which contains `**Hello <%=@name or 'World'%>**`.
 
-We could then render it by using `<%-@partial('hello.html.md.eco')%>` to get back `<strong>Hello World</strong>` or with `<%-@partial('hello.html.md.eco',{name:'Apprentice'})%>` to get back `<strong>Hello Apprentice</strong>`.
+### Compatibility
 
+- Versions 2.8.0 and above DO send the template data by default. You can turn this off by using `false` as the first object argument or by setting `performanceFirst: true` in your plugin's configuration options.
+
+- Versions below 2.8.0 DO NOT send the template data by default. You must add it by using `@` or `this` as the first object argument like so: `<%- @partial('my-partial', @) %>`
 
 
 ## History

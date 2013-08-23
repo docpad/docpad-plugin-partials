@@ -1,5 +1,11 @@
 ## History
 
+- v2.8.0 August 23, 2013
+	- Template data is now sent with partial calls by default, and can be turned off by setting the first object you pass the the partial as `false`, e.g. `<%- @partial('hello', false, blah) %>`
+		- This has been documented quite thoroughly now in the README
+		- This backwards compatibility break is due to the incredibly high amount of "user error" issues not sending the template data by default causes. In hindsight, it has become apparent to us that sacrificing docpad performance time for developer performance time and developer happiness is a far better trade. Caring about performance should come secondary to happiness. Not before it.
+		- For those whom do care about performance, you should update all your existing partial calls to make use of the new first `false` object practice, or if you are too lazy set `performanceFirst: true` in the plugin's configuration options.
+
 - v2.7.2 July 30, 2013
 	- You can now customise the collection name via the `collectioName` option
 	- Updated some older docpad api conventions for their newer equilevants

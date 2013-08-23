@@ -15,6 +15,7 @@ module.exports = (BasePlugin) ->
 		config:
 			partialsPath: 'partials'
 			collectionName: 'partials'
+			performanceFirst: false
 
 		# Locale
 		locale:
@@ -147,11 +148,11 @@ module.exports = (BasePlugin) ->
 			me = @
 			docpad = @docpad
 			locale = @locale
-			config = @getConfig()
 
 			# Apply
-			templateData.partial = (partialName,objs...) ->
+			templateData.partial = (partialName, objs...) ->
 				# Reference others
+				config = me.getConfig()
 				@referencesOthers?()
 
 				# Prepare
@@ -168,13 +169,20 @@ module.exports = (BasePlugin) ->
 					partial.err = err
 					return message
 
-				# Fetch our partial data
-				partial.data =
-					if objs.length >= 2
-						objs.unshift({})
-						extendr.shallowExtendPlainObjects(objs...)
-					else
-						objs[0] ? {}
+				# Prepare the initial partial data
+				partial.data = {}
+
+				# If no object is provided then provide the current template data as the first thing
+				# if the performance first option is set to false (the default)
+				if config.performanceFirst is false
+					objs.unshift(@)  unless objs[0] in [false, @]
+
+				# Cycle through the objects merging them together
+				# ignore boolean values
+				for obj in objs
+					continue  unless obj or obj is true
+					extendr.shallowExtendPlainObjects(partial.data, obj)
+					# ^ why do we just do a shallow extend here instead of a deep extend?
 
 				# Prepare our partial id
 				partial.code = partial.document.id
@@ -189,7 +197,7 @@ module.exports = (BasePlugin) ->
 				me.foundPartials[partial.id] = partial
 
 				# Start rendering the partial
-				partial.task ?= new Task (complete) ->
+				partial.task = new Task (complete) ->
 					me.renderPartial partial, (err,result) ->
 						partial.err = err
 						partial.result = result ? err?.toString() ? '???'
@@ -225,7 +233,7 @@ module.exports = (BasePlugin) ->
 					return partial.result
 
 				# Complete
-				next()
+				return next()
 
 			# Wait for found partials to complete rendering
 			partialContainers.forEach (partialContainer) ->
@@ -234,7 +242,10 @@ module.exports = (BasePlugin) ->
 				partial = me.foundPartials[partialId]
 
 				# Wait for all the partials to complete rendering
-				tasks.addTask (complete) -> partial.task.once('complete',complete).complete()
+				return  if partial.task.completed is true
+				tasks.addTask (complete) ->
+					return complete()  if partial.task.completed is true
+					return partial.task.once('complete', complete)
 
 			# Run the tasks
 			tasks.run()
