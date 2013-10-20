@@ -8,3 +8,6 @@ module.exports = (testers) ->
 			enabledPlugins:
 				'partials': true
 				'eco': true
+			plugins:
+				partials: 
+                    partialsPath: ['partials', 'custom-dir-partials']
