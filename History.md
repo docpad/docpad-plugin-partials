@@ -1,5 +1,10 @@
 ## History
 
+- v2.8.1 November 6, 2013
+	- Fixed error reporting when a partial breaks (regression since always???)
+	- Partials now render inside the `renderDocument` event, rather than any random time
+	- Updated dependencies
+
 - v2.8.0 August 23, 2013
 	- Template data is now sent with partial calls by default, and can be turned off by setting the first object you pass the the partial as `false`, e.g. `<%- @partial('hello', false, blah) %>`
 		- This has been documented quite thoroughly now in the README

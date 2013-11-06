@@ -166,7 +166,7 @@ module.exports = (BasePlugin) ->
 					# Partial was not found
 					message = util.format(locale.partialNotFound, partialName)
 					err = new Error(message)
-					partial.err = err
+					partial.err ?= err
 					return message
 
 				# Prepare the initial partial data
@@ -196,13 +196,12 @@ module.exports = (BasePlugin) ->
 				# Store the partial
 				me.foundPartials[partial.id] = partial
 
-				# Start rendering the partial
-				partial.task = new Task (complete) ->
-					me.renderPartial partial, (err,result) ->
-						partial.err = err
-						partial.result = result ? err?.toString() ? '???'
-						return complete()
-				partial.task.run()
+				# Create the task for our partial
+				partial.task = new Task "renderPartial: #{partial.code}", (complete) ->
+					me.renderPartial partial, (err, result) ->
+						partial.err ?= err
+						partial.result = partial.err?.toString() ? result ? '???'
+						return complete(partial.err)
 
 				# Return the container
 				return partial.container
@@ -223,9 +222,9 @@ module.exports = (BasePlugin) ->
 
 			# Prepare
 			me = @
-			tasks = new TaskGroup().setConfig(concurrency:0).once 'complete', ->
+			tasks = new TaskGroup concurrency: 0, next: (err) ->
 				# Replace containers with results
-				opts.content = opts.content.replace partialContainerRegex, (match,partialId) ->
+				opts.content = opts.content.replace partialContainerRegex, (match, partialId) ->
 					# Fetch partial
 					partial = me.foundPartials[partialId]
 
@@ -233,7 +232,7 @@ module.exports = (BasePlugin) ->
 					return partial.result
 
 				# Complete
-				return next()
+				return next(err)
 
 			# Wait for found partials to complete rendering
 			partialContainers.forEach (partialContainer) ->
@@ -242,10 +241,7 @@ module.exports = (BasePlugin) ->
 				partial = me.foundPartials[partialId]
 
 				# Wait for all the partials to complete rendering
-				return  if partial.task.completed is true
-				tasks.addTask (complete) ->
-					return complete()  if partial.task.completed is true
-					return partial.task.once('complete', complete)
+				tasks.addTask(partial.task)
 
 			# Run the tasks
 			tasks.run()

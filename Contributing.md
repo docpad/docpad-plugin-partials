@@ -1,36 +1,38 @@
-# Contributing
-
-## Support
-
-[Post your question on StackOverflow with the `docpad` tag](http://stackoverflow.com/questions/tagged/docpad)
-
-
-## Bug reports
-
-[Post your bug report on the GitHub Issue Tracker for this project](https://github.com/docpad/docpad-plugin-partials/issues)
-
+# Contribute
 
 ## Development
 
-### Install dependencies
+1. Fork the project and clone your fork
+2. Install global dependencies
 
-``` bash
-npm install; npm install -g coffee-script
-```
+	``` bash
+	npm install -g coffee-script
+	```
 
-### Setup for development
+3. Compile the project
 
-``` bash
-cake setup
-```
+	``` bash
+	# Only once
+	cake compile
 
-### Watch and compile
+	# On every change
+	cake watch
+	```
 
-``` bash
-cake watch
-```
+4. Run your tests
 
+	``` bash
+	cake test
+	```
 
-## Testing
+5. Prepare the project for publishing
 
-No tests yet!
+	``` bash
+	cake prepublish
+	```
+
+6. Publish the project
+
+	``` bash
+	cake publish
+	```

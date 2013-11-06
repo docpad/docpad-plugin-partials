@@ -1,8 +1,18 @@
 {
   "name": "docpad-plugin-partials",
-  "version": "2.8.0",
+  "version": "2.8.1",
   "description": "Adds support for Partials (re-usable templates) to DocPad",
   "homepage": "http://docpad.org/plugin/partials",
+  "license": {
+    "type": "MIT"
+  },
+  "badges": {
+    "travis": true,
+    "npm": true,
+    "gittip": "docpad",
+    "flattr": "344188/balupton-on-Flattr",
+    "paypal": "QB8GQPZAH84N6"
+  },
   "keywords": [
     "docpad",
     "docpad-plugin",
@@ -12,15 +22,11 @@
     "templating",
     "template"
   ],
-  "author": "Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
+  "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
     "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
   ],
-  "contributors": [
-    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
-    "Bob VanderClay (https://github.com/takitapart)",
-    "Bruno Héridet (https://github.com/Delapouite)"
-  ],
+  "contributors": [],
   "bugs": {
     "url": "https://github.com/bevry/docpad-extras/issues"
   },
@@ -32,14 +38,15 @@
     "node": ">=0.4"
   },
   "dependencies": {
-    "taskgroup": "~3.2.0",
+    "taskgroup": "~3.3.1",
     "extendr": "~2.1.0"
   },
   "peerDependencies": {
     "docpad": ">=6.46 <7"
   },
   "devDependencies": {
-    "coffee-script": "~1.6.2"
+    "coffee-script": "~1.6.2",
+    "projectz": "~0.2.5"
   },
   "main": "./out/partials.plugin.js",
   "scripts": {
