@@ -46,7 +46,8 @@
   },
   "devDependencies": {
     "coffee-script": "~1.6.2",
-    "projectz": "~0.2.5"
+    "projectz": "~0.2.5",
+    "docpad": ">=6.46 <7"
   },
   "main": "./out/partials.plugin.js",
   "scripts": {
