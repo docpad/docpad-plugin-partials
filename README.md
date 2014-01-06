@@ -11,7 +11,7 @@
 <!-- /BADGES -->
 
 
-This plugin provides [DocPad](https://docpad.org) with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
+Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
 
 
 ## Install
