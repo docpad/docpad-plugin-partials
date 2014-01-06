@@ -92,7 +92,7 @@ Welcome to Ben's Awesome Site
 
 ### Notes
 
-To increase performance it is recommended you only include the exact template data variables that you need - this is because sending over all the template data can be a costly process as we much destroy all references (do a deep clone) to avoid reference conflicts and over-writes between each render - so sending over as little / as specific data as possible means less reference destroying which means faster processing.
+To increase performance provide minimal template data. Preparing the template data for inclusion is a costly process.
 
 If your partial only needs to be rendered once per (re)generation then you can specify `cacheable: true` in the partial's meta data, doing so greatly improves performance.
 
