@@ -23,7 +23,7 @@ docpad install partials
 
 ## Usage
 
-Create the `src/partials` directory, and place any partials you want to use in there.
+Create the `src/partials` directory, and place partials in there.
 
 Then call the new `partial(filename, objs...)` template helper to include the partial. The object arguments are optional, and can be used to send custom data to the partial's template data. Setting the first object argument to `false` will not send over the template data by default.
 
