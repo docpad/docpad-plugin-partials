@@ -28,11 +28,11 @@
   ],
   "contributors": [],
   "bugs": {
-    "url": "https://github.com/bevry/docpad-extras/issues"
+    "url": "https://github.com/docpad/docpad-plugin-partials/issues"
   },
   "repository": {
     "type": "git",
-    "url": "http://github.com/bevry/docpad-extras.git"
+    "url": "http://github.com/docpad/docpad-plugin-partials.git"
   },
   "engines": {
     "node": ">=0.4"
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "coffee-script": "~1.6.2",
-    "projectz": "~0.2.5",
+    "projectz": "~0.3.5",
     "docpad": ">=6.46 <7"
   },
   "main": "./out/partials.plugin.js",
