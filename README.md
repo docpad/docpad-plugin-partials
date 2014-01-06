@@ -2,11 +2,14 @@
 
 <!-- BADGES/ -->
 
-[![Build Status](http://img.shields.io/travis-ci/bevry/docpad-plugin-partials.png?branch=master)](http://travis-ci.org/bevry/docpad-plugin-partials "Check this project's build status on TravisCI")
+[![Build Status](http://img.shields.io/travis-ci/docpad/docpad-plugin-partials.png?branch=master)](http://travis-ci.org/docpad/docpad-plugin-partials "Check this project's build status on TravisCI")
 [![NPM version](http://badge.fury.io/js/docpad-plugin-partials.png)](https://npmjs.org/package/docpad-plugin-partials "View this project on NPM")
+[![Dependency Status](https://david-dm.org/docpad/docpad-plugin-partials.png?theme=shields.io)](https://david-dm.org/docpad/docpad-plugin-partials)
+[![Development Dependency Status](https://david-dm.org/docpad/docpad-plugin-partials/dev-status.png?theme=shields.io)](https://david-dm.org/docpad/docpad-plugin-partials#info=devDependencies)<br/>
 [![Gittip donate button](http://img.shields.io/gittip/docpad.png)](https://www.gittip.com/docpad/ "Donate weekly to this project using Gittip")
 [![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
 [![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
+[![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
 
 <!-- /BADGES -->
 
@@ -112,7 +115,7 @@ Partials actually render asynchronously, when you call `<%- @partial('hello') %>
 <!-- HISTORY/ -->
 
 ## History
-[Discover the change history by heading on over to the `History.md` file.](https://github.com/bevry/docpad-plugin-partials/blob/master/History.md#files)
+[Discover the change history by heading on over to the `HISTORY.md` file.](https://github.com/docpad/docpad-plugin-partials/blob/master/HISTORY.md#files)
 
 <!-- /HISTORY -->
 
@@ -121,7 +124,7 @@ Partials actually render asynchronously, when you call `<%- @partial('hello') %>
 
 ## Contribute
 
-[Discover how you can contribute by heading on over to the `Contributing.md` file.](https://github.com/bevry/docpad-plugin-partials/blob/master/Contributing.md#files)
+[Discover how you can contribute by heading on over to the `CONTRIBUTING.md` file.](https://github.com/docpad/docpad-plugin-partials/blob/master/CONTRIBUTING.md#files)
 
 <!-- /CONTRIBUTE -->
 
@@ -143,11 +146,18 @@ No sponsors yet! Will you be the first?
 [![Gittip donate button](http://img.shields.io/gittip/docpad.png)](https://www.gittip.com/docpad/ "Donate weekly to this project using Gittip")
 [![Flattr donate button](http://img.shields.io/flattr/donate.png?color=yellow)](http://flattr.com/thing/344188/balupton-on-Flattr "Donate monthly to this project using Flattr")
 [![PayPayl donate button](http://img.shields.io/paypal/donate.png?color=yellow)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=QB8GQPZAH84N6 "Donate once-off to this project using Paypal")
+[![BitCoin donate button](http://img.shields.io/bitcoin/donate.png?color=yellow)](https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a "Donate once-off to this project using BitCoin")
 
 ### Contributors
 
-No contributors yet! Will you be the first?
-[Discover how you can contribute by heading on over to the `Contributing.md` file.](https://github.com/bevry/docpad-plugin-partials/blob/master/Contributing.md#files)
+These amazing people have contributed code to this project:
+
+- [Benjamin Lupton](https://github.com/balupton) <b@lupton.cc> — [view contributions](https://github.com/docpad/docpad-plugin-partials/commits?author=balupton)
+- [Delapouite](https://github.com/Delapouite) — [view contributions](https://github.com/docpad/docpad-plugin-partials/commits?author=Delapouite)
+- [patocallaghan](https://github.com/patocallaghan) — [view contributions](https://github.com/docpad/docpad-plugin-partials/commits?author=patocallaghan)
+- [takitapart](https://github.com/takitapart) — [view contributions](https://github.com/docpad/docpad-plugin-partials/commits?author=takitapart)
+
+[Become a contributor!](https://github.com/docpad/docpad-plugin-partials/blob/master/CONTRIBUTING.md#files)
 
 <!-- /BACKERS -->
 
