@@ -70,7 +70,7 @@ Welcome to Ben's Awesome Site
 
 <!-- Include the rendered contents of `src/partials/my-partial` file -->
 <!-- and DO NOT send over the template data -->
-<%- @partial('hello', false}) %>
+<%- @partial('hello', false) %>
 <!-- gives us:
 Hello World
 Welcome to My Site
