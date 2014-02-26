@@ -1,4 +1,8 @@
-## History
+# History
+
+- v2.9.0 February 26, 2013
+	- Now supports multiple partial paths
+		- Thanks to [pflannery](https://github.com/pflannery) for [pull request #14](https://github.com/docpad/docpad-plugin-partials/pull/14)
 
 - v2.8.1 November 6, 2013
 	- Fixed error reporting when a partial breaks (regression since always???)

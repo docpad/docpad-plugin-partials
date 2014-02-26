@@ -87,7 +87,7 @@ module.exports = (BasePlugin) ->
 			database = docpad.getDatabase()
 
 			# Add our partials collection
-			docpad.setCollection config.collectionName, database.createLiveChildCollection()
+			docpad.setCollection(config.collectionName, database.createLiveChildCollection()
 				.setQuery('isPartial', {
 					$or:
 						isPartial: true
@@ -101,6 +101,7 @@ module.exports = (BasePlugin) ->
 						write: false
 					)
 				)
+			)
 
 			# Chain
 			@
