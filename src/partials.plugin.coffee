@@ -200,9 +200,7 @@ module.exports = (BasePlugin) ->
 
 				# Create the task for our partial
 				partial.task = new Task "renderPartial: #{partial.path}", (complete) ->
-					console.log(    'This partial is rendering:', partial.id, partial.path, partial.result?, partial.document.id)
 					me.renderPartial partial, (err, result) ->
-						console.log('This partial has rendered:', partial.id, partial.path, partial.result?, partial.document.id)
 						partial.err ?= err
 						partial.result = partial.err?.toString() ? result ? '???'
 						return complete(partial.err)
@@ -246,12 +244,6 @@ module.exports = (BasePlugin) ->
 				partial = me.foundPartials[partialId]
 
 				# Wait for all the partials to complete rendering
-				console.log(    'This partial is now added:', partial.id, partial.path, partial.result?, partial.document.id)
-				partial.task.on 'run', ->
-					console.log('This partial has started: ', partial.id, partial.path, partial.result?, partial.document.id)
-				partial.task.on 'complete', ->
-					console.log('This partial has finished:', partial.id, partial.path, partial.result?, partial.document.id)
-
 				tasks.addTask(partial.task)  if partial.task
 
 			# Run the tasks
