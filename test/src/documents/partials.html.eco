@@ -34,3 +34,6 @@ title: 'Partials Test'
 
 <!-- empty -->
 <%- @partial('empty.html') %>
+
+<!-- With a partial containing the same partial -->
+<%- @partial('header.html.eco', false, {name: @partial('header.html.eco', false)}) %>

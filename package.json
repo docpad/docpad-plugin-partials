@@ -48,7 +48,7 @@
     "node": ">=0.4"
   },
   "dependencies": {
-    "taskgroup": "~3.3.1",
+    "taskgroup": "~3.4.0",
     "extendr": "~2.1.0"
   },
   "peerDependencies": {
