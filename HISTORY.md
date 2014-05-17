@@ -1,6 +1,9 @@
 # History
 
-- v2.9.0 February 26, 2013
+- v2.9.1 May 7, 2014
+	- Minor improvements to make debugging easier
+
+- v2.9.0 February 26, 2014
 	- Now supports multiple partial paths
 		- Thanks to [pflannery](https://github.com/pflannery) for [pull request #14](https://github.com/docpad/docpad-plugin-partials/pull/14)
 
