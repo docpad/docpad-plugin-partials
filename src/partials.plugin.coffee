@@ -122,7 +122,7 @@ module.exports = (BasePlugin) ->
 			# Check if our partial is cacheable
 			cacheable = partial.document.getMeta().get('cacheable') ? false
 			if cacheable is true
-				result = partialsCache[partial.code] ? null
+				result = partialsCache[partial.cacheId] ? null
 
 			# Got from cache, so use that
 			return next(null, result)  if result?
@@ -134,7 +134,7 @@ module.exports = (BasePlugin) ->
 
 				# Cache
 				if cacheable is true
-					partialsCache[partial.code] = result
+					partialsCache[partial.cacheId] = result
 
 				# Forward
 				return next(null, result)
@@ -186,8 +186,9 @@ module.exports = (BasePlugin) ->
 					# ^ why do we just do a shallow extend here instead of a deep extend?
 
 				# Prepare our partial id
-				partial.code = partial.document.id
-				partial.id = Math.random() # require('crypto').createHash('md5').update(partial.code+'|'+JSON.stringify(partial.data)).digest('hex')
+				partial.path = partial.document.getFilePath()
+				partial.cacheId = partial.document.id
+				partial.id = Math.random() # require('crypto').createHash('md5').update(partial.cacheId+'|'+JSON.stringify(partial.data)).digest('hex')
 				partial.container = '[partial:'+partial.id+']'
 
 				# Check if a partial with this id already exists!
@@ -198,8 +199,10 @@ module.exports = (BasePlugin) ->
 				me.foundPartials[partial.id] = partial
 
 				# Create the task for our partial
-				partial.task = new Task "renderPartial: #{partial.code}", (complete) ->
+				partial.task = new Task "renderPartial: #{partial.path}", (complete) ->
+					console.log(    'This partial is rendering:', partial.id, partial.path, partial.result?, partial.document.id)
 					me.renderPartial partial, (err, result) ->
+						console.log('This partial has rendered:', partial.id, partial.path, partial.result?, partial.document.id)
 						partial.err ?= err
 						partial.result = partial.err?.toString() ? result ? '???'
 						return complete(partial.err)
@@ -214,16 +217,17 @@ module.exports = (BasePlugin) ->
 		# Render our partials
 		renderDocument: (opts,next) ->
 			# Prepare
-			{templateData,file} = opts
+			{templateData, file} = opts
 
 			# Check
 			partialContainerRegex = /\[partial:([^\]]+)\]/g
 			partialContainers = (opts.content or '').match(partialContainerRegex) or []
 			return next()  if partialContainers.length is 0
+			filePath = file.getFilePath()
 
 			# Prepare
 			me = @
-			tasks = new TaskGroup concurrency: 0, next: (err) ->
+			tasks = new TaskGroup "Partials for #{filePath}", concurrency:0, next: (err) ->
 				# Replace containers with results
 				opts.content = opts.content.replace partialContainerRegex, (match, partialId) ->
 					# Fetch partial
@@ -238,11 +242,17 @@ module.exports = (BasePlugin) ->
 			# Wait for found partials to complete rendering
 			partialContainers.forEach (partialContainer) ->
 				# Fetch partial
-				partialId = partialContainer.replace(partialContainerRegex,'$1')
+				partialId = partialContainer.replace(partialContainerRegex, '$1')
 				partial = me.foundPartials[partialId]
 
 				# Wait for all the partials to complete rendering
-				tasks.addTask(partial.task)
+				console.log(    'This partial is now added:', partial.id, partial.path, partial.result?, partial.document.id)
+				partial.task.on 'run', ->
+					console.log('This partial has started: ', partial.id, partial.path, partial.result?, partial.document.id)
+				partial.task.on 'complete', ->
+					console.log('This partial has finished:', partial.id, partial.path, partial.result?, partial.document.id)
+
+				tasks.addTask(partial.task)  if partial.task
 
 			# Run the tasks
 			tasks.run()
