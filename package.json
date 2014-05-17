@@ -56,11 +56,14 @@
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
-    "projectz": "~0.3.11",
+    "projectz": "~0.3.13",
     "docpad": ">=6.46 <7"
   },
   "main": "./out/partials.plugin.js",
   "scripts": {
     "test": "node ./out/partials.test.js"
+  },
+  "cakeConfiguration": {
+    "COFFEE_SRC_PATH": "src"
   }
 }
