@@ -56,7 +56,7 @@
     "docpad": ">=6.46 <7"
   },
   "devDependencies": {
-    "coffee-script": "~1.7.1",
+    "coffee-script": "~1.8.0",
     "projectz": "~0.3.17",
     "docpad": ">=6.46 <7"
   },
