@@ -9,9 +9,10 @@
   "badges": {
     "travis": true,
     "npm": true,
+    "npmdownloads": true,
     "david": true,
     "daviddev": true,
-    "gittip": "docpad",
+    "gratipay": "docpad",
     "flattr": "344188/balupton-on-Flattr",
     "paypal": "QB8GQPZAH84N6",
     "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
@@ -56,7 +57,7 @@
   },
   "devDependencies": {
     "coffee-script": "~1.7.1",
-    "projectz": "~0.3.13",
+    "projectz": "~0.3.17",
     "docpad": ">=6.46 <7"
   },
   "main": "./out/partials.plugin.js",
