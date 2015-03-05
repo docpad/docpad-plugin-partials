@@ -225,7 +225,7 @@ module.exports = (BasePlugin) ->
 
 			# Prepare
 			me = @
-			tasks = new TaskGroup "Partials for #{filePath}", concurrency:0, next: (err) ->
+			tasks = new TaskGroup("Partials for #{filePath}", concurrency:0).done (err) ->
 				# Replace containers with results
 				opts.content = opts.content.replace partialContainerRegex, (match, partialId) ->
 					# Fetch partial
