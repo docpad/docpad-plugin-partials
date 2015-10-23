@@ -219,7 +219,7 @@ module.exports = (BasePlugin) ->
 
 			# Check
 			partialContainerRegex = /\[partial:([^\]]+)\]/g
-			partialContainers = typeof opts.content === 'string' ? opts.content.match(partialContainerRegex) : []
+			partialContainers = if typeof opts.content is 'string' then opts.content.match(partialContainerRegex) else []
 			return next()  if partialContainers.length is 0
 			filePath = file.getFilePath()
 
