@@ -95,7 +95,6 @@ module.exports = (BasePlugin) ->
 				})
 				.on('add', (model) ->
 					docpad.log('debug', util.format(locale.addingPartial, model.getFilePath()))
-					docpad.log('warning', model)
 					model.setDefaults(
 						isPartial: true
 						render: false
