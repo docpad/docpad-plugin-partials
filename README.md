@@ -108,6 +108,8 @@ To increase performance it is recommended you only include the exact template da
 
 If your partial only needs to be rendered once per (re)generation then you can specify `cacheable: true` in the partial's meta data, doing so greatly improves performance.
 
+An alternate to using the ```src/partials``` folder is to instead include ```isPartial: true``` in a document's metadata. This will prevent that document from being written during generation, but will make it available as a partial. The above guidelines around referencing (e.g. ```<%- @partial('metadata-flagged-partial', false, { localState: true }) %>```) apply.
+
 Partials actually render asynchronously, when you call `<%- @partial('hello') %>` you'll actually get back something a temporary placeholder like `[partial:0.1290219301293]` while your template is rendering, then once your template has rendered, and once all the partials have rendered, we will then go through and replace these placeholder values with the correct content. We must do this as template rendering is a synchronous process whereas document rendering is an asynchronous process. [More info here.](https://github.com/docpad/docpad-plugin-partials/issues/12)
 
 

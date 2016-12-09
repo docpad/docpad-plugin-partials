@@ -37,3 +37,13 @@ title: 'Partials Test'
 
 <!-- With a partial containing the same partial -->
 <%- @partial('header.html.eco', false, {name: @partial('header.html.eco', false)}) %>
+
+<!-- A partial by way of setting metadata (isPartial: true) -->
+<%- @partial('metadata-flagged-partial.html') %>
+<%- @partial('metadata-flagged-partial') %>
+
+<!-- A partial by way of setting metadata (isPartial: true), located in a subfolder -->
+<%- @partial('folder/metadata-flagged-partial-in-folder.html') %>
+<%- @partial('folder/metadata-flagged-partial-in-folder') %>
+<%- @partial('metadata-flagged-partial-in-folder.html') %>
+<%- @partial('metadata-flagged-partial-in-folder') %>

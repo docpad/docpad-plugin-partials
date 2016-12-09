@@ -162,7 +162,12 @@ module.exports = (BasePlugin) ->
 
 				# Fetch our partial
 				partialFuzzyPath = pathUtil.join(config.partialsPath, partialName)
-				partial.document ?= docpad.getCollection('partials').fuzzyFindOne(partialFuzzyPath)
+				partialCollection = docpad.getCollection(config.collectionName)
+				partial.document ?= partialCollection.fuzzyFindOne(partialFuzzyPath)
+				partial.document ?= partialCollection.findOne({ filename: $startsWith: partialName })
+				partial.document ?= partialCollection.findOne({ basename: partialName })
+				partial.document ?= partialCollection.findOne({ relativeBase: partialName })
+				partial.document ?= partialCollection.findOne({ relativeOutPath: partialName })
 				unless partial.document
 					# Partial was not found
 					message = util.format(locale.partialNotFound, partialName)
