@@ -1,7 +1,7 @@
 {
   "title": "Partials Plugin for DocPad",
   "name": "docpad-plugin-partials",
-  "version": "2.10.0",
+  "version": "2.11.0",
   "description": "Adds support for Partials (re-usable templates) to DocPad",
   "homepage": "https://github.com/docpad/docpad-plugin-partials",
   "license": "MIT",
