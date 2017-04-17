@@ -1,6 +1,7 @@
 {
+  "title": "Partials Plugin for DocPad",
   "name": "docpad-plugin-partials",
-  "version": "2.9.2",
+  "version": "2.10.0",
   "description": "Adds support for Partials (re-usable templates) to DocPad",
   "homepage": "https://github.com/docpad/docpad-plugin-partials",
   "license": "MIT",
@@ -97,7 +98,7 @@
     "projectz": "^1.4.0"
   },
   "peerDependencies": {
-    "docpad": ">=6.46 <7"
+    "docpad": "^6.46"
   },
   "scripts": {
     "our:setup": "npm run our:setup:npm && npm run our:setup:docpad",

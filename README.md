@@ -1,4 +1,9 @@
-# Partials Plugin for [DocPad](http://docpad.org)
+<!-- TITLE/ -->
+
+<h1>Partials Plugin for DocPad</h1>
+
+<!-- /TITLE -->
+
 
 <!-- BADGES/ -->
 
