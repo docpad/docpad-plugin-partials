@@ -2,22 +2,8 @@
   "name": "docpad-plugin-partials",
   "version": "2.9.2",
   "description": "Adds support for Partials (re-usable templates) to DocPad",
-  "homepage": "http://docpad.org/plugin/partials",
-  "license": {
-    "type": "MIT"
-  },
-  "badges": {
-    "travis": true,
-    "npm": true,
-    "npmdownloads": true,
-    "david": true,
-    "daviddev": true,
-    "gratipay": "docpad",
-    "flattr": "344188/balupton-on-Flattr",
-    "paypal": "QB8GQPZAH84N6",
-    "bitcoin": "https://coinbase.com/checkouts/9ef59f5479eec1d97d63382c9ebcb93a",
-    "wishlist": "http://amzn.com/w/2F8TXKSNAFG4V"
-  },
+  "homepage": "https://github.com/docpad/docpad-plugin-partials",
+  "license": "MIT",
   "keywords": [
     "docpad",
     "docpad-plugin",
@@ -27,16 +13,46 @@
     "templating",
     "template"
   ],
+  "badges": {
+    "list": [
+      "travisci",
+      "npmversion",
+      "npmdownloads",
+      "daviddm",
+      "daviddmdev",
+      "---",
+      "patreon",
+      "opencollective",
+      "gratipay",
+      "flattr",
+      "paypal",
+      "bitcoin",
+      "wishlist",
+      "---",
+      "slackin"
+    ],
+    "config": {
+      "patreonUsername": "bevry",
+      "opencollectiveUsername": "bevry",
+      "gratipayUsername": "bevry",
+      "flattrUsername": "balupton",
+      "paypalURL": "https://bevry.me/paypal",
+      "bitcoinURL": "https://bevry.me/bitcoin",
+      "wishlistURL": "https://bevry.me/wishlist",
+      "slackinURL": "https://slack.bevry.me"
+    }
+  },
   "author": "2012+ Bevry Pty Ltd <us@bevry.me> (http://bevry.me)",
   "maintainers": [
-    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)"
+    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)"
   ],
   "contributors": [
-    "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
-    "Delapouite (https://github.com/Delapouite)",
-    "iredmedia (https://github.com/iredmedia)",
-    "patocallaghan (https://github.com/patocallaghan)",
-    "takitapart (https://github.com/takitapart)"
+    "Benjamin Lupton <b@lupton.cc> (http://balupton.com)",
+    "Bruno Heridet (http://delapouite.com)",
+    "Kevin Redman <iredmedia@gmail.com> (iredmedia.com)",
+    "Pat O'Callaghan <patocallaghan@gmail.com> (http://littleglitch.io)",
+    "Bob VanderClay (http://takitapart.com)",
+    "vsopvsop (https://github.com/vsopvsop)"
   ],
   "bugs": {
     "url": "https://github.com/docpad/docpad-plugin-partials/issues"
@@ -46,25 +62,62 @@
     "url": "https://github.com/docpad/docpad-plugin-partials.git"
   },
   "engines": {
-    "node": ">=0.4"
+    "node": ">=0.8"
   },
+  "editions": [
+    {
+      "description": "Source + CoffeeScript + Require",
+      "directory": "source",
+      "entry": "partials.plugin.coffee",
+      "syntaxes": [
+        "coffeescript",
+        "require"
+      ]
+    },
+    {
+      "description": "CoffeeScript Compiled + ES5 + Require",
+      "directory": "es5",
+      "entry": "partials.plugin.js",
+      "syntaxes": [
+        "javascript",
+        "es5",
+        "require"
+      ]
+    }
+  ],
+  "main": "es5/partials.plugin.js",
   "dependencies": {
-    "taskgroup": "^4.2.0",
-    "extendr": "^2.1.0"
+    "extendr": "^2.1.0",
+    "taskgroup": "^4.2.0"
+  },
+  "devDependencies": {
+    "coffee-script": "^1.12.5",
+    "coffeelint": "^1.16.0",
+    "docpad": "^6.79.4",
+    "projectz": "^1.4.0"
   },
   "peerDependencies": {
     "docpad": ">=6.46 <7"
   },
-  "devDependencies": {
-    "coffee-script": "^1.9.1",
-    "projectz": "^0.5.0",
-    "docpad": ">=6.46 <7"
-  },
-  "main": "./out/partials.plugin.js",
   "scripts": {
-    "test": "node ./out/partials.test.js"
-  },
-  "cakeConfiguration": {
-    "COFFEE_SRC_PATH": "src"
+    "our:setup": "npm run our:setup:npm && npm run our:setup:docpad",
+    "our:setup:npm": "npm install",
+    "our:setup:docpad": "bash ./docpad-setup.sh",
+    "our:clean": "rm -Rf ./docs ./es2015 ./es5 ./out",
+    "our:compile": "npm run our:compile:coffee",
+    "our:compile:coffee": "coffee -bco ./es5 ./source",
+    "our:meta": "npm run our:meta:projectz",
+    "our:meta:projectz": "projectz compile",
+    "our:verify": "npm run our:verify:coffeelint",
+    "our:verify:coffeelint": "coffeelint ./source",
+    "our:test": "npm run our:verify && npm test",
+    "our:release": "npm run our:release:prepare && npm run our:release:check && npm run our:release:tag && npm run our:release:push",
+    "our:release:prepare": "npm run our:clean && npm run our:compile && npm run our:test && npm run our:meta",
+    "our:release:check": "npm run our:release:check:changelog && npm run our:release:check:dirty",
+    "our:release:check:changelog": "cat ./HISTORY.md | grep v$npm_package_version || (echo add a changelog entry for v$npm_package_version && exit -1)",
+    "our:release:check:dirty": "git diff --exit-code",
+    "our:release:tag": "export MESSAGE=$(cat ./HISTORY.md | sed -n \"/## v$npm_package_version/,/##/p\" | sed 's/## //' | awk 'NR>1{print buf}{buf = $0}') && test \"$MESSAGE\" || (echo 'proper changelog entry not found' && exit -1) && git tag v$npm_package_version -am \"$MESSAGE\"",
+    "our:release:push": "git push origin master && git push origin --tags",
+    "test": "node --harmony es5/partials.test.js --joe-reporter=console"
   }
 }
