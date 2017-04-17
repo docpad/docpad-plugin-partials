@@ -181,9 +181,9 @@ module.exports = (BasePlugin) ->
 				# Cycle through the objects merging them together
 				# ignore boolean values
 				for obj in objs
-					continue  unless obj or obj is true
-					extendr.shallowExtendPlainObjects(partial.data, obj)
-					# ^ why do we just do a shallow extend here instead of a deep extend?
+					if obj and (obj isnt true)
+						extendr.extend(partial.data, obj)
+						# ^ why do we just do a shallow extend here instead of a deep extend?
 
 				# Prepare our partial id
 				partial.path = partial.document.getFilePath()
