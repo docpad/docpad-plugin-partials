@@ -13,7 +13,7 @@ module.exports = (BasePlugin) ->
 
 		# Default Configuration
 		config:
-			partialsPath: 'partials'
+			partialsPath: ['partials']
 			collectionName: 'partials'
 			performanceFirst: false
 
@@ -45,7 +45,7 @@ module.exports = (BasePlugin) ->
 			@foundPartials = {}
 
 			# DocPad -v6.24.0 Compatible
-			config.partialsPath = pathUtil.resolve(docpadConfig.srcPath, config.partialsPath)
+			config.partialsPath = (pathUtil.resolve(docpadConfig.srcPath, partialsPath) for partialsPath in config.partialsPath)
 
 
 		# DocPad v6.24.0+ Compatible
@@ -57,7 +57,7 @@ module.exports = (BasePlugin) ->
 			config = @getConfig()
 
 			# Adjust
-			config.partialsPath = pathUtil.resolve(docpadConfig.srcPath, config.partialsPath)
+			config.partialsPath = (pathUtil.resolve(docpadConfig.srcPath, partialsPath) for partialsPath in config.partialsPath)
 
 			# Chain
 			@
@@ -73,7 +73,7 @@ module.exports = (BasePlugin) ->
 			docpad = @docpad
 
 			# Load our partials directory
-			docpad.parseDocumentDirectory({path: config.partialsPath}, next)
+			docpad.parseDocumentDirectory({path: partialsPath}, next) for partialsPath in config.partialsPath
 
 			# Chain
 			@
@@ -91,7 +91,7 @@ module.exports = (BasePlugin) ->
 				.setQuery('isPartial', {
 					$or:
 						isPartial: true
-						fullPath: $startsWith: config.partialsPath
+						fullPath: $startsWith: config.partialsPath[0]
 				})
 				.on('add', (model) ->
 					docpad.log('debug', util.format(locale.addingPartial, model.getFilePath()))
