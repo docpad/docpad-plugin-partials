@@ -111,6 +111,7 @@ module.exports = (BasePlugin) ->
 					$or:
 						isPartial: true
 						fullPath: $startsWith: config.partialPaths[0]
+						fullPath: $startsWith: config.partialPaths[1]
 				})
 				.on('add', (model) ->
 					docpad.log('debug', util.format(locale.addingPartial, model.getFilePath()))
