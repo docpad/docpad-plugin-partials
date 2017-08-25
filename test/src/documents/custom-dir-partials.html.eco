@@ -1,0 +1,36 @@
+---
+title: 'Partials Test'
+---
+
+<!-- with template data -->
+<%- @partial('custom-dir-header.html.eco') %>
+
+<!-- with template data -->
+<%- @partial('custom-dir-header.html.eco', @) %>
+
+<!-- with template data -->
+<%- @partial('custom-dir-header.html.eco', true) %>
+
+<!-- WITHOUT template data -->
+<%- @partial('custom-dir-header.html.eco', false) %>
+
+<!-- with template data and custom name -->
+<%- @partial('custom-dir-header.html.eco', @, {name:'Partials!'}) %>
+
+<!-- with template data and custom name -->
+<%- @partial('custom-dir-header.html.eco', {name:'Partials!'}) %>
+
+<!-- with template data and custom name -->
+<%- @partial('custom-dir-header.html.eco', true, {name:'Partials!'}) %>
+
+<!-- WITHOUT template data and custom name -->
+<%- @partial('custom-dir-header.html.eco', false, {name:'Partials!'}) %>
+
+<!-- with template data via fuzzy -->
+<%- @partial('custom-dir-header.html') %>
+
+<!-- footer -->
+<%- @partial('custom-dir-footer.html') %>
+
+<!-- empty -->
+<%- @partial('custom-dir-empty.html') %>
