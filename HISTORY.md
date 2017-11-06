@@ -1,5 +1,9 @@
 # History
 
+## v2.12.0 2017 November 6
+- Added support for multiple partial paths
+  - Thanks to [pflannery](https://github.com/pflannery) for [pull request #34](https://github.com/docpad/docpad-plugin-partials/pull/34) being based off his initial contribution
+
 ## v2.11.0 2017 April 17
 - Updated dependencies
 
