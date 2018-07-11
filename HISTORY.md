@@ -1,5 +1,9 @@
 # History
 
+## v2.13.0 2018 July 11
+- Updated base files using [boundation](https://github.com/bevry/boundation)
+- Compiled with CoffeeScript v2
+
 ## v2.12.0 2017 November 6
 - Added support for multiple partial paths
   - Thanks to [pflannery](https://github.com/pflannery) for [pull request #34](https://github.com/docpad/docpad-plugin-partials/pull/34) being based off his initial contribution

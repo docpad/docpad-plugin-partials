@@ -34,42 +34,26 @@ module.exports = (BasePlugin) ->
 		# Initialize
 
 		# Prepare our Configuration
-		constructor: ->
-			# Prepare
-			super
-			@prepareConfig()
-			# Creatte our found partials object
-			@partialsCache = {}
-			@foundPartials = {}
+		setConfig: (...args) ->
+			# Apply
+			super(...args)
 
-
-		# DocPad v6.24.0+ Compatible
-		# Configuration
-		setConfig: ->
-			# Prepare
-			super
-			@prepareConfig()
-		
-			# Chain
-			@
- 
-		# Prepare our Configuration
-		prepareConfig: ->
+			# Adjust
 			docpadConfig = @docpad.getConfig()
 			config = @getConfig()
-		
+
 			# ensure config name backward compatibility
 			config.partialPaths = config.partialsPath or config.partialPaths
-		
+
 			# ensure the partialPaths is an array
 			unless util.isArray(config.partialPaths)
 				config.partialPaths = [config.partialPaths]
-		
+
 			# Adjust
 			config.partialPaths.forEach (partialPath, index) ->
 				config.partialPaths[index] = pathUtil.resolve(docpadConfig.srcPath, partialPath)
 				return
-		
+
 			# Chain
 			@
 
@@ -89,7 +73,7 @@ module.exports = (BasePlugin) ->
 				docpad.parseDocumentDirectory {path: partialPath}, (err, results) ->
 					if err or processedCount==(config.partialPaths.length-1)
 						next(err)
-		
+
 					processedCount++
 					return
 				return
@@ -277,8 +261,14 @@ module.exports = (BasePlugin) ->
 			# Chain
 			@
 
+		# Generate Before
+		# Reset the found partials before each generate, otherwise it will get very big
+		generateBefore: ->
+			@foundPartials = {}
+			@partialsCache = {}
+
 		# Generate After
-		# Reset the found partials after each generate, otherwise it will get very big
+		# Reset the found partials after each generate, otherwise it will linger uncessarily
 		generateAfter: ->
 			@foundPartials = {}
 			@partialsCache = {}
