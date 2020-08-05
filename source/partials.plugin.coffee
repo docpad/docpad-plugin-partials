@@ -51,7 +51,7 @@ module.exports = (BasePlugin) ->
 
 			# Adjust
 			config.partialPaths.forEach (partialPath, index) ->
-				config.partialPaths[index] = pathUtil.resolve(docpadConfig.srcPath, partialPath)
+				config.partialPaths[index] = pathUtil.resolve(docpad.getPath('source'), partialPath)
 				return
 
 			# Chain
