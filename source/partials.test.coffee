@@ -1,2 +1,4 @@
+'use strict'
+
 # Test our plugin using DocPad's Testers
-require('docpad').require('testers').test({pluginPath: __dirname+'/..'})
+module.exports = require('docpad-plugintester').test()
