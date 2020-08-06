@@ -4,7 +4,6 @@
 
 <!-- /TITLE -->
 
-
 <!-- BADGES/ -->
 
 <span class="badge-travisci"><a href="http://travis-ci.org/docpad/docpad-plugin-partials" title="Check this project's build status on TravisCI"><img src="https://img.shields.io/travis/docpad/docpad-plugin-partials/master.svg" alt="Travis CI Build Status" /></a></span>
@@ -24,12 +23,7 @@
 
 <!-- /BADGES -->
 
-
 This plugin provides [DocPad](https://docpad.org) with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
-
-
-
-
 
 ## Usage
 
@@ -37,19 +31,17 @@ Create the `src/partials` directory, and place any partials you want to use in t
 
 Then call the new `partial(filename, objs...)` template helper to include the partial. The object arguments are optional, and can be used to send custom data to the partial's template data. Setting the first object argument to `false` will not send over the template data by default.
 
-
 ### Examples
 
 Lets say we have the partial `src/partials/hello.html.eco` that includes:
 
-``` html
-Hello <%=@name or 'World'%>
-Welcome to <%= @site?.name or 'My Site' %>
+```html
+Hello <%=@name or 'World'%> Welcome to <%= @site?.name or 'My Site' %>
 ```
 
 And a [docpad configuration file](http://docpad.org) file that includes:
 
-``` coffee
+```coffee
 templateData:
 	site:
 		name: "Ben's Awesome Site"
@@ -57,7 +49,7 @@ templateData:
 
 We could then render via a `src/documents/index.html.eco` document in these different ways:
 
-``` html
+```html
 <!-- Include the rendered contents of `src/partials/my-partial` file -->
 <!-- and send over the template data -->
 <%- @partial('hello') %>
@@ -102,7 +94,6 @@ Welcome to Ben's Awesome Site
 -->
 ```
 
-
 ### Notes
 
 To increase performance it is recommended you only include the exact template data variables that you need - this is because sending over all the template data can be a costly process as we much destroy all references (do a deep clone) to avoid reference conflicts and over-writes between each render - so sending over as little / as specific data as possible means less reference destroying which means faster processing.
@@ -111,15 +102,11 @@ If your partial only needs to be rendered once per (re)generation then you can s
 
 Partials actually render asynchronously, when you call `<%- @partial('hello') %>` you'll actually get back something a temporary placeholder like `[partial:0.1290219301293]` while your template is rendering, then once your template has rendered, and once all the partials have rendered, we will then go through and replace these placeholder values with the correct content. We must do this as template rendering is a synchronous process whereas document rendering is an asynchronous process. [More info here.](https://github.com/docpad/docpad-plugin-partials/issues/12)
 
-
 ### Compatibility
 
-- Versions 2.8.0 and above DO send the template data by default. You can turn this off by using `false` as the first object argument or by setting `performanceFirst: true` in your plugin's configuration options.
+-   Versions 2.8.0 and above DO send the template data by default. You can turn this off by using `false` as the first object argument or by setting `performanceFirst: true` in your plugin's configuration options.
 
-- Versions below 2.8.0 DO NOT send the template data by default. You must add it by using `@` or `this` as the first object argument like so: `<%- @partial('my-partial', @) %>`
-
-
-
+-   Versions below 2.8.0 DO NOT send the template data by default. You must add it by using `@` or `this` as the first object argument like so: `<%- @partial('my-partial', @) %>`
 
 <!-- INSTALL/ -->
 
@@ -137,7 +124,6 @@ Install this DocPad plugin by entering <code>docpad install partials</code> into
 
 <!-- /HISTORY -->
 
-
 <!-- CONTRIBUTE/ -->
 
 <h2>Contribute</h2>
@@ -145,7 +131,6 @@ Install this DocPad plugin by entering <code>docpad install partials</code> into
 <a href="https://github.com/docpad/docpad-plugin-partials/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /CONTRIBUTE -->
-
 
 <!-- BACKERS/ -->
 
@@ -183,7 +168,6 @@ These amazing people have contributed code to this project:
 <a href="https://github.com/docpad/docpad-plugin-partials/blob/master/CONTRIBUTING.md#files">Discover how you can contribute by heading on over to the <code>CONTRIBUTING.md</code> file.</a>
 
 <!-- /BACKERS -->
-
 
 <!-- LICENSE/ -->
 

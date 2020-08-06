@@ -1,273 +1,342 @@
-# Export Plugin
-module.exports = (BasePlugin) ->
-	# Requires
-	extendr = require('extendr')
-	{Task,TaskGroup} = require('taskgroup')
-	pathUtil = require('path')
-	util = require('util')
+/* eslint-disable class-methods-use-this */
+// @ts-nocheck
+'use strict'
 
-	# Define Plugin
-	class PartialsPlugin extends BasePlugin
-		# Plugin Name
-		name: 'partials'
+// Export Plugin
+module.exports = function (BasePlugin) {
+	// Requires
+	const extendr = require('extendr')
+	const { Task, TaskGroup } = require('taskgroup')
+	const pathUtil = require('path')
+	const { format } = require('util')
 
-		# Default Configuration
-		config:
-			partialPaths: ['partials']
-			collectionName: 'partials'
-			performanceFirst: false
+	// Define Plugin
+	return class PartialsPlugin extends BasePlugin {
+		// Plugin Name
+		get name() {
+			return 'partials'
+		}
 
-		# Locale
-		locale:
-			addingPartial: "Adding partial: %s"
-			partialNotFound: "The partial \"%s\" was not found, as such it will not be rendered."
-			renderPartial: "Rendering partial: %s"
-			renderedPartial: "Rendered partial: %s"
-			renderPartialFailed: "Rendering partial failed: %s. The error follows:"
+		// Default Configuration
+		get initialConfig() {
+			return {
+				partialPaths: ['partials'],
+				collectionName: 'partials',
+				performanceFirst: false,
+			}
+		}
 
-		# Partial helpers
-		foundPartials: null  # Object
-		partialsCache: null  # Object
-
-
-		# -----------------------------
-		# Initialize
-
-		# Prepare our Configuration
-		setConfig: (...args) ->
-			# Apply
+		// Variables
+		constructor(...args) {
 			super(...args)
 
-			# Prepare
-			config = @getConfig()
-			docpad = @docpad
+			this.locale = {
+				addingPartial: 'Adding partial: %s',
+				partialNotFound:
+					'The partial "%s" was not found, as such it will not be rendered.',
+				renderPartial: 'Rendering partial: %s',
+				renderedPartial: 'Rendered partial: %s',
+				renderPartialFailed: 'Rendering partial failed: %s. The error follows:',
+			}
 
-			# ensure config name backward compatibility
-			config.partialPaths = config.partialsPath or config.partialPaths
+			this.foundPartials = {}
+			this.partialsCache = {}
+		}
 
-			# ensure the partialPaths is an array
-			unless util.isArray(config.partialPaths)
+		// -----------------------------
+		// Initialize
+
+		// Prepare our Configuration
+		setConfig(...args) {
+			// Apply
+			super.setConfig(...args)
+
+			// Prepare
+			const config = this.getConfig()
+			const { docpad } = this
+
+			// ensure config name backward compatibility
+			config.partialPaths = config.partialsPath || config.partialPaths
+
+			// ensure the partialPaths is an array
+			if (!Array.isArray(config.partialPaths)) {
 				config.partialPaths = [config.partialPaths]
+			}
 
-			# Adjust
-			config.partialPaths.forEach (partialPath, index) ->
-				config.partialPaths[index] = pathUtil.resolve(docpad.getPath('source'), partialPath)
-				return
-
-			# Chain
-			@
-
-
-		# -----------------------------
-		# Events
-
-		# Populate Collections
-		populateCollections: (opts,next) ->
-			# Prepare
-			config = @getConfig()
-			docpad = @docpad
-
-			# Load our partials directory
-			processedCount = 0
-			config.partialPaths.forEach (partialPath) ->
-				docpad.parseDocumentDirectory {path: partialPath}, (err, results) ->
-					if err or processedCount==(config.partialPaths.length-1)
-						next(err)
-
-					processedCount++
-					return
-				return
-
-			# Chain
-			@
-
-		# Extend Collections
-		extendCollections: (opts) ->
-			# Prepare
-			config = @getConfig()
-			docpad = @docpad
-			locale = @locale
-			database = docpad.getDatabase()
-
-			# Add our partials collection
-			docpad.setCollection(config.collectionName, database.createLiveChildCollection()
-				.setQuery('isPartial', {
-					$or:
-						isPartial: true
-						fullPath: $startsWith: config.partialPaths
-				})
-				.on('add', (model) ->
-					docpad.log('debug', util.format(locale.addingPartial, model.getFilePath()))
-					model.setDefaults(
-						isPartial: true
-						render: false
-						write: false
-					)
+			// Adjust
+			config.partialPaths.forEach(function (partialPath, index) {
+				config.partialPaths[index] = pathUtil.resolve(
+					docpad.getPath('source'),
+					partialPath
 				)
+			})
+		}
+
+		// -----------------------------
+		// Events
+
+		// Populate Collections
+		populateCollections(opts, next) {
+			// Prepare
+			const config = this.getConfig()
+			const { docpad } = this
+
+			// Load our partials directory
+			let exited = false
+			config.partialPaths.forEach(function (partialPath) {
+				docpad.parseDocumentDirectory({ path: partialPath }, function (
+					err,
+					results
+				) {
+					if (err) {
+						exited = true
+						next(err)
+					}
+				})
+			})
+
+			// if we didn't exist from the loop, then exit here
+			if (exited === false) {
+				next()
+			}
+		}
+
+		// Extend Collections
+		extendCollections(opts) {
+			// Prepare
+			const config = this.getConfig()
+			const { docpad, locale } = this
+			const database = docpad.getDatabase()
+
+			// Add our partials collection
+			docpad.setCollection(
+				config.collectionName,
+				database
+					.createLiveChildCollection()
+					.setQuery('isPartial', {
+						$or: {
+							isPartial: true,
+							fullPath: {
+								$startsWith: config.partialPaths,
+							},
+						},
+					})
+					.on('add', function (model) {
+						docpad.log(
+							'debug',
+							format(locale.addingPartial, model.getFilePath())
+						)
+						model.setDefaults({
+							isPartial: true,
+							render: false,
+							write: false,
+						})
+					})
 			)
+		}
 
-			# Chain
-			@
+		// -----------------------------
+		// Rendering
 
-		# -----------------------------
-		# Rendering
+		// Render Partial
+		// Render a partial asynchronously
+		// next(err,result,document)
+		renderPartial(partial, next) {
+			// Prepare
+			const { docpad, partialsCache } = this
+			let result
 
-		# Render Partial
-		# Render a partial asynchronously
-		# next(err,result,document)
-		renderPartial: (partial,next) ->
-			# Prepare
-			docpad = @docpad
-			partialsCache = @partialsCache
-			result = null
+			// Check if our partial is cacheable
+			let cacheable = partial.document.getMeta().get('cacheable')
+			if (cacheable == null) cacheable = false
+			else if (cacheable) {
+				result = partialsCache[partial.cacheId]
+			}
 
-			# Check if our partial is cacheable
-			cacheable = partial.document.getMeta().get('cacheable') ? false
-			if cacheable is true
-				result = partialsCache[partial.cacheId] ? null
-
-			# Got from cache, so use that
-			return next(null, result)  if result?
-
-			# Render
-			docpad.renderDocument partial.document, {templateData:partial.data}, (err,result,document) ->
-				# Check
-				return next(err)  if err
-
-				# Cache
-				if cacheable is true
-					partialsCache[partial.cacheId] = result
-
-				# Forward
+			// Got from cache, so use that
+			if (result != null) {
 				return next(null, result)
+			}
 
-			# Chain
-			@
+			// Render
+			docpad.renderDocument(
+				partial.document,
+				{ templateData: partial.data },
+				function (err, result, document) {
+					// Check
+					if (err) return next(err)
 
-		# Extend Template Data
-		# Inject our partial methods
-		extendTemplateData: ({templateData}) ->
-			# Prepare
-			me = @
-			docpad = @docpad
-			locale = @locale
+					// Cache
+					if (cacheable) {
+						partialsCache[partial.cacheId] = result
+					}
 
-			# Apply
-			templateData.partial = (partialName, objs...) ->
-				# Reference others
-				config = me.getConfig()
-				@referencesOthers?()
+					// Forward
+					return next(null, result == null ? null : result)
+				}
+			)
+		}
 
-				# Prepare
-				file = @documentModel
-				partial = {}
+		// Extend Template Data
+		// Inject our partial methods
+		extendTemplateData({ templateData }) {
+			// Prepare
+			const me = this
+			const { docpad, locale } = this
 
-				# Fetch our partial
-				#partialFuzzyPath = pathUtil.join(config.partialsPath, partialName)
-				#partial.document ?= docpad.getCollection('partials').fuzzyFindOne(partialFuzzyPath)
-				collection = docpad.getCollection('partials')
-				config.partialPaths.forEach (partialPath) ->
-					partialFuzzyPath = pathUtil.join(partialPath, partialName)
-					partial.document ?= collection.fuzzyFindOne(partialFuzzyPath)
-					return
+			// Apply
+			templateData.partial = function (partialName, ...objs) {
+				// Reference others
+				const config = me.getConfig()
+				if (this.referencesOthers) {
+					this.referencesOthers()
+				}
 
-				unless partial.document
-					# Partial was not found
-					message = util.format(locale.partialNotFound, partialName)
-					err = new Error(message)
-					partial.err ?= err
+				// Prepare
+				// const file = this.documentModel
+				const partial = {}
+
+				// Fetch our partial
+				// partialFuzzyPath = pathUtil.join(config.partialsPath, partialName)
+				// partial.document ?= docpad.getCollection('partials').fuzzyFindOne(partialFuzzyPath)
+				const collection = docpad.getCollection('partials')
+				config.partialPaths.forEach(function (partialPath) {
+					const partialFuzzyPath = pathUtil.join(partialPath, partialName)
+					if (!partial.document) {
+						partial.document = collection.fuzzyFindOne(partialFuzzyPath)
+					}
+				})
+
+				// partial not found
+				if (!partial.document) {
+					const message = format(locale.partialNotFound, partialName)
+					const err = new Error(message)
+					if (partial.err == null) {
+						partial.err = err
+					}
 					return message
+				}
 
-				# Prepare the initial partial data
+				// Prepare the initial partial data
 				partial.data = {}
 
-				# If no object is provided then provide the current template data as the first thing
-				# if the performance first option is set to false (the default)
-				if config.performanceFirst is false
-					objs.unshift(@)  unless objs[0] in [false, @]
+				// If no object is provided then provide the current template data as the first thing
+				// if the performance first option is set to false (the default)
+				if (config.performanceFirst === false) {
+					if ([false, this].includes(objs[0]) === false) {
+						objs.unshift(this)
+					}
+				}
 
-				# Cycle through the objects merging them together
-				# ignore boolean values
-				for obj in objs
-					if obj and (obj isnt true)
+				// Cycle through the objects merging them together
+				// ignore boolean values
+				for (const obj of objs) {
+					if (obj && obj !== true) {
 						extendr.extend(partial.data, obj)
-						# ^ why do we just do a shallow extend here instead of a deep extend?
+						// ^ why do we just do a shallow extend here instead of a deep extend?
+					}
+				}
 
-				# Prepare our partial id
+				// Prepare our partial id
 				partial.path = partial.document.getFilePath()
 				partial.cacheId = partial.document.id
-				partial.id = Math.random() # require('crypto').createHash('md5').update(partial.cacheId+'|'+JSON.stringify(partial.data)).digest('hex')
-				partial.container = '[partial:'+partial.id+']'
+				partial.id = Math.random() // require('crypto').createHash('md5').update(partial.cacheId+'|'+JSON.stringify(partial.data)).digest('hex')
+				partial.container = '[partial:' + partial.id + ']'
 
-				# Check if a partial with this id already exists!
-				if me.foundPartials[partial.id]
+				// Check if a partial with this id already exists!
+				if (me.foundPartials[partial.id]) {
 					return partial.container
+				}
 
-				# Store the partial
+				// Store the partial
 				me.foundPartials[partial.id] = partial
 
-				# Create the task for our partial
-				partial.task = new Task "renderPartial: #{partial.path}", (complete) ->
-					me.renderPartial partial, (err, result) ->
-						partial.err ?= err
-						partial.result = partial.err?.toString() ? result ? '???'
+				// Create the task for our partial
+				partial.task = new Task(`renderPartial: ${partial.path}`, function (
+					complete
+				) {
+					me.renderPartial(partial, function (err, result) {
+						if (partial.err == null) partial.err = err
+						if (partial.err) {
+							partial.result = partial.err.toString()
+						} else if (result) {
+							partial.result = result
+						} else {
+							partial.result = '???'
+						}
 						return complete(partial.err)
+					})
+				})
 
-				# Return the container
+				// Return the container
 				return partial.container
+			}
+		}
 
-			# Chain
-			@
+		// Render the Document
+		// Render our partials
+		renderDocument(opts, next) {
+			// Prepare
+			const me = this
+			const { templateData, file } = opts
 
-		# Render the Document
-		# Render our partials
-		renderDocument: (opts,next) ->
-			# Prepare
-			{templateData, file} = opts
+			// Check
+			const partialContainerRegex = /\[partial:([^\]]+)\]/g
+			const partialContainers =
+				(opts.content || '').match(partialContainerRegex) || []
+			if (partialContainers.length === 0) {
+				return next()
+			}
+			const filePath = file.getFilePath()
 
-			# Check
-			partialContainerRegex = /\[partial:([^\]]+)\]/g
-			partialContainers = (opts.content or '').match(partialContainerRegex) or []
-			return next()  if partialContainers.length is 0
-			filePath = file.getFilePath()
+			// Prepare
+			const tasks = new TaskGroup(`Partials for ${filePath}`, {
+				concurrency: 0,
+			}).done(function (err) {
+				// Replace containers with results
+				opts.content = opts.content.replace(partialContainerRegex, function (
+					match,
+					partialId
+				) {
+					// Fetch partial
+					const partial = me.foundPartials[partialId]
 
-			# Prepare
-			me = @
-			tasks = new TaskGroup("Partials for #{filePath}", concurrency:0).done (err) ->
-				# Replace containers with results
-				opts.content = opts.content.replace partialContainerRegex, (match, partialId) ->
-					# Fetch partial
-					partial = me.foundPartials[partialId]
-
-					# Return result
+					// Return result
 					return partial.result
+				})
 
-				# Complete
+				// Complete
 				return next(err)
+			})
 
-			# Wait for found partials to complete rendering
-			partialContainers.forEach (partialContainer) ->
-				# Fetch partial
-				partialId = partialContainer.replace(partialContainerRegex, '$1')
-				partial = me.foundPartials[partialId]
+			// Wait for found partials to complete rendering
+			partialContainers.forEach(function (partialContainer) {
+				// Fetch partial
+				const partialId = partialContainer.replace(partialContainerRegex, '$1')
+				const partial = me.foundPartials[partialId]
 
-				# Wait for all the partials to complete rendering
-				tasks.addTask(partial.task)  if partial.task
+				// Wait for all the partials to complete rendering
+				if (partial.task) {
+					tasks.addTask(partial.task)
+				}
+			})
 
-			# Run the tasks
+			// Run the tasks
 			tasks.run()
+		}
 
-			# Chain
-			@
+		// Generate Before
+		// Reset the found partials before each generate, otherwise it will get very big
+		generateBefore() {
+			this.foundPartials = {}
+			this.partialsCache = {}
+		}
 
-		# Generate Before
-		# Reset the found partials before each generate, otherwise it will get very big
-		generateBefore: ->
-			@foundPartials = {}
-			@partialsCache = {}
-
-		# Generate After
-		# Reset the found partials after each generate, otherwise it will linger uncessarily
-		generateAfter: ->
-			@foundPartials = {}
-			@partialsCache = {}
+		// Generate After
+		// Reset the found partials after each generate, otherwise it will linger uncessarily
+		generateAfter() {
+			this.foundPartials = {}
+			this.partialsCache = {}
+		}
+	}
+}
