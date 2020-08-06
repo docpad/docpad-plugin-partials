@@ -5,6 +5,7 @@
 // Export Plugin
 module.exports = function (BasePlugin) {
 	// Requires
+	const Errlop = require('errlop').default
 	const extendr = require('extendr')
 	const { Task, TaskGroup } = require('taskgroup')
 	const pathUtil = require('path')
@@ -55,8 +56,14 @@ module.exports = function (BasePlugin) {
 			const config = this.getConfig()
 			const { docpad } = this
 
-			// ensure config name backward compatibility
-			config.partialPaths = config.partialsPath || config.partialPaths
+			// ensure config name backward compatibility (partial[s]Path, partial[]Path[s])
+			if (config.partialsPath) {
+				docpad.log(
+					'note',
+					'partials plugin configuration had partialsPath defined, but it is partialPaths'
+				)
+				config.partialPaths = config.partialsPath
+			}
 
 			// ensure the partialPaths is an array
 			if (!Array.isArray(config.partialPaths)) {
@@ -70,6 +77,9 @@ module.exports = function (BasePlugin) {
 					partialPath
 				)
 			})
+
+			// Debug
+			console.log(config, args)
 		}
 
 		// -----------------------------
@@ -82,23 +92,19 @@ module.exports = function (BasePlugin) {
 			const { docpad } = this
 
 			// Load our partials directory
-			let exited = false
+			let error = null
 			config.partialPaths.forEach(function (partialPath) {
 				docpad.parseDocumentDirectory({ path: partialPath }, function (
 					err,
 					results
 				) {
-					if (err) {
-						exited = true
-						next(err)
-					}
+					// stack the errors
+					if (err) error = new Errlop(err, error)
 				})
 			})
 
-			// if we didn't exist from the loop, then exit here
-			if (exited === false) {
-				next()
-			}
+			// complete with the error if we have one
+			next(error)
 		}
 
 		// Extend Collections
