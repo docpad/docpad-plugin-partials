@@ -38,9 +38,9 @@ module.exports = (BasePlugin) ->
 			# Apply
 			super(...args)
 
-			# Adjust
-			docpadConfig = @docpad.getConfig()
+			# Prepare
 			config = @getConfig()
+			docpad = @docpad
 
 			# ensure config name backward compatibility
 			config.partialPaths = config.partialsPath or config.partialPaths
@@ -64,7 +64,7 @@ module.exports = (BasePlugin) ->
 		# Populate Collections
 		populateCollections: (opts,next) ->
 			# Prepare
-			config = @config
+			config = @getConfig()
 			docpad = @docpad
 
 			# Load our partials directory
@@ -118,7 +118,6 @@ module.exports = (BasePlugin) ->
 		renderPartial: (partial,next) ->
 			# Prepare
 			docpad = @docpad
-			locale = @locale
 			partialsCache = @partialsCache
 			result = null
 

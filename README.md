@@ -28,13 +28,7 @@
 This plugin provides [DocPad](https://docpad.org) with Partials. Partials are documents which can be inserted into other documents, and are also passed by the docpad rendering engine.
 
 
-<!-- INSTALL/ -->
 
-<h2>Install</h2>
-
-Install this DocPad plugin by entering <code>docpad install partials</code> into your terminal.
-
-<!-- /INSTALL -->
 
 
 ## Usage
@@ -124,6 +118,16 @@ Partials actually render asynchronously, when you call `<%- @partial('hello') %>
 
 - Versions below 2.8.0 DO NOT send the template data by default. You must add it by using `@` or `this` as the first object argument like so: `<%- @partial('my-partial', @) %>`
 
+
+
+
+<!-- INSTALL/ -->
+
+<h2>Install</h2>
+
+Install this DocPad plugin by entering <code>docpad install partials</code> into your terminal.
+
+<!-- /INSTALL -->
 
 <!-- HISTORY/ -->
 
