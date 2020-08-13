@@ -43,7 +43,12 @@
       "opencollectiveUsername": "bevry",
       "patreonUsername": "bevry",
       "paypalURL": "https://bevry.me/paypal",
-      "wishlistURL": "https://bevry.me/wishlist"
+      "wishlistURL": "https://bevry.me/wishlist",
+      "travisTLD": "com",
+      "githubUsername": "docpad",
+      "githubRepository": "docpad-plugin-partials",
+      "githubSlug": "docpad/docpad-plugin-partials",
+      "npmPackageName": "docpad-plugin-partials"
     }
   },
   "funding": "https://bevry.me/fund",
@@ -53,12 +58,13 @@
   ],
   "contributors": [
     "Benjamin Lupton <b@lupton.cc> (https://github.com/balupton)",
-    "Bruno Heridet <delapouite@gmail.com> (http://delapouite.com)",
-    "Kevin Redman <iredmedia@gmail.com> (iredmedia.com)",
-    "Pat O'Callaghan <patocallaghan@gmail.com> (http://littleglitch.io)",
     "Bob VanderClay (http://takitapart.com)",
-    "vsopvsop (https://github.com/vsopvsop)",
-    "patuf (https://github.com/patuf)"
+    "Bob VanderClay (https://github.com/bobvanderclay)",
+    "Bruno Heridet <delapouite@gmail.com> (https://github.com/Delapouite)",
+    "Kevin Redman <iredmedia@gmail.com> (https://github.com/iredmedia)",
+    "Pat O'Callaghan <patocallaghan@gmail.com> (https://github.com/patocallaghan)",
+    "patuf (https://github.com/patuf)",
+    "vsopvsop (https://github.com/vsopvsop)"
   ],
   "bugs": {
     "url": "https://github.com/docpad/docpad-plugin-partials/issues"
@@ -72,7 +78,7 @@
   },
   "editions": [
     {
-      "description": "ESNext source code for Node.js with Require for modules",
+      "description": "ESNext source code for Node.js 10 || 12 || 13 || 14 with Require for modules",
       "directory": "source",
       "entry": "index.js",
       "tags": [
@@ -81,119 +87,34 @@
         "require"
       ],
       "engines": {
-        "node": true
-      }
-    },
-    {
-      "description": "ESNext compiled for Node.js 14 with Require for modules",
-      "directory": "edition-node-14",
-      "entry": "index.js",
-      "tags": [
-        "javascript",
-        "require"
-      ],
-      "engines": {
-        "node": true,
-        "browsers": false
-      }
-    },
-    {
-      "description": "ESNext compiled for Node.js 10 with Require for modules",
-      "directory": "edition-node-10",
-      "entry": "index.js",
-      "tags": [
-        "javascript",
-        "require"
-      ],
-      "engines": {
-        "node": true,
-        "browsers": false
+        "node": "10 || 12 || 13 || 14"
       }
     }
   ],
   "type": "commonjs",
-  "main": "index.cjs",
+  "main": "source/index.js",
   "dependencies": {
     "docpad-baseplugin": "^1.4.0",
-    "editions": "^3.16.0",
     "errlop": "^3.15.0",
     "extendr": "^5.13.0",
     "taskgroup": "^7.14.0"
   },
   "devDependencies": {
-    "@babel/cli": "^7.10.5",
-    "@babel/core": "^7.11.1",
-    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
-    "@babel/preset-env": "^7.11.0",
     "@bevry/update-contributors": "^1.15.0",
     "coffeescript": "^2.5.1",
     "docpad": "^6.83.1",
-    "docpad-plugintester": "^1.6.2",
+    "docpad-plugintester": "^1.7.1",
     "eslint": "^7.6.0",
     "eslint-config-bevry": "^3.18.0",
     "eslint-config-prettier": "^6.11.0",
     "eslint-plugin-prettier": "^3.1.4",
     "prettier": "^2.0.5",
     "projectz": "^2.13.0",
-    "valid-directory": "^2.8.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "bevry"
-    ]
-  },
-  "prettier": {
-    "semi": false,
-    "singleQuote": true
-  },
-  "babel": {
-    "env": {
-      "edition-node-14": {
-        "sourceType": "script",
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "14"
-              },
-              "modules": "commonjs"
-            }
-          ]
-        ],
-        "plugins": [
-          "@babel/proposal-object-rest-spread"
-        ]
-      },
-      "edition-node-10": {
-        "sourceType": "script",
-        "presets": [
-          [
-            "@babel/preset-env",
-            {
-              "targets": {
-                "node": "10"
-              },
-              "modules": "commonjs"
-            }
-          ]
-        ],
-        "plugins": [
-          "@babel/proposal-object-rest-spread"
-        ]
-      }
-    }
-  },
-  "boundation": {
-    "languages": [
-      "esnext"
-    ]
+    "valid-directory": "^3.0.0"
   },
   "scripts": {
     "our:clean": "rm -Rf ./docs ./edition* ./es2015 ./es5 ./out ./.next",
-    "our:compile": "npm run our:compile:edition-node-10 && npm run our:compile:edition-node-14",
-    "our:compile:edition-node-10": "env BABEL_ENV=edition-node-10 babel --out-dir ./edition-node-10 ./source && echo '{\"type\": \"commonjs\"}' > edition-node-10/package.json",
-    "our:compile:edition-node-14": "env BABEL_ENV=edition-node-14 babel --out-dir ./edition-node-14 ./source && echo '{\"type\": \"commonjs\"}' > edition-node-14/package.json",
+    "our:compile": "echo no need for this project",
     "our:deploy": "echo no need for this project",
     "our:meta": "npm run our:meta:contributors && npm run our:meta:projectz",
     "our:meta:contributors": "update-contributors",
@@ -212,5 +133,19 @@
     "our:verify:eslint": "eslint --fix --ignore-pattern '**/*.d.ts' --ignore-pattern '**/vendor/' --ignore-pattern '**/node_modules/' --ext .mjs,.js,.jsx,.ts,.tsx ./source",
     "our:verify:prettier": "prettier --write .",
     "test": "docpad-plugintester"
+  },
+  "eslintConfig": {
+    "extends": [
+      "bevry"
+    ]
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "boundation": {
+    "languages": [
+      "esnext"
+    ]
   }
 }
