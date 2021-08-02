@@ -95,7 +95,7 @@
   "main": "source/index.js",
   "dependencies": {
     "docpad-baseplugin": "^1.4.0",
-    "errlop": "^3.15.0",
+    "errlop": "^4.5.0",
     "extendr": "^5.13.0",
     "taskgroup": "^7.14.0"
   },
